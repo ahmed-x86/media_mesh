@@ -27,4 +27,4 @@ It is recommended to build the project in a separate `build` directory:
 git clone https://github.com/ahmed-x86/media_mesh.git
 cd media_mesh
 cmake . && make  
-```# media_mesh
+```
