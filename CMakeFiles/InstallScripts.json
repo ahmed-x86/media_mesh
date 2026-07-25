@@ -1,0 +1,7 @@
+{
+	"InstallScripts" : 
+	[
+		"/mnt/data/github_repos/media_mesh/cmake_install.cmake"
+	],
+	"Parallel" : false
+}
