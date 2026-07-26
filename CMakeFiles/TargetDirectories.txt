@@ -1,5 +1,0 @@
-/mnt/data/github_repos/media_mesh/CMakeFiles/test_app.dir
-/mnt/data/github_repos/media_mesh/CMakeFiles/edit_cache.dir
-/mnt/data/github_repos/media_mesh/CMakeFiles/rebuild_cache.dir
-/mnt/data/github_repos/media_mesh/CMakeFiles/test_app_autogen_timestamp_deps.dir
-/mnt/data/github_repos/media_mesh/CMakeFiles/test_app_autogen.dir

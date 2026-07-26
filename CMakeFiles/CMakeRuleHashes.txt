@@ -1,3 +1,0 @@
-# Hashes of file build rules.
-3ce9311c0d279411400a23dd49abfcb4 CMakeFiles/test_app_autogen
-4e6a8a06f83590f4cf2ba8a56fc75c10 test_app_autogen/timestamp

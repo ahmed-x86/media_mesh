@@ -1,0 +1,9 @@
+# CMake build files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*_autogen/
+
+# Binaries & Executables
+test_app
