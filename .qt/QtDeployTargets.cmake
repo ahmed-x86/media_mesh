@@ -1,2 +1,2 @@
-set(__QT_DEPLOY_TARGET_test_app_FILE /mnt/data/github_repos/media_mesh/test_app)
-set(__QT_DEPLOY_TARGET_test_app_TYPE EXECUTABLE)
+set(__QT_DEPLOY_TARGET_media_mesh_FILE /mnt/data/github_repos/media_mesh/media_mesh)
+set(__QT_DEPLOY_TARGET_media_mesh_TYPE EXECUTABLE)
