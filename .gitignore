@@ -6,4 +6,4 @@ Makefile
 *_autogen/
 
 # Binaries & Executables
-test_app
+media_mesh
