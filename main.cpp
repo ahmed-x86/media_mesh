@@ -29,6 +29,18 @@
 #include <QStyledItemDelegate>
 #include <QAbstractItemView>
 #include <QScrollBar>
+#include <QTextEdit>
+#include <QStringList>
+
+namespace MediaCategories {
+    const QStringList ImageExtensions = {"jpg", "jpeg", "png", "bmp", "webp", "gif", "ico"};
+    const QStringList VideoExtensions = {"mp4", "mkv", "webm", "mov", "avi", "flv"};
+    const QStringList AudioExtensions = {"mp3", "aac", "wav", "flac", "ogg", "m4a"};
+
+    const QStringList ImageProfiles = {"gif", "jpg", "jpeg", "webp", "ico", "bmp"};
+    const QStringList VideoProfiles = {"mp4", "mp4_nvenc", "mp4_amd_vaapi", "mkv", "webm", "av1", "davinci_cuda_full", "davinci_amd_full", "prores_cuda_full"};
+    const QStringList AudioProfiles = {"mp3", "aac"};
+}
 
 namespace Mocha {
     static const QColor Base      (0x1e, 0x1e, 0x2e);
@@ -136,6 +148,60 @@ public:
         
         layout->addWidget(lbl);
         layout->addStretch();
+        layout->addWidget(btnOk, 0, Qt::AlignCenter);
+        
+        dlg.exec();
+    }
+};
+
+class FileInfoBox : public QDialog {
+public:
+    static void showInfo(QWidget *parent, const QString &filePath) {
+        QDialog dlg(parent);
+        dlg.setWindowTitle("File Information");
+        dlg.setMinimumSize(500, 400);
+
+        QString qss = QStringLiteral(R"(
+            QDialog { background-color: %1; }
+            QLabel { color: %2; font-size: 14px; font-weight: bold; }
+            QTextEdit {
+                background-color: %3; color: %2; border-radius: 8px;
+                padding: 10px; font-size: 13px; border: 1px solid %4;
+            }
+            QPushButton { 
+                background-color: %3; color: %2; border-radius: 8px; 
+                padding: 8px 24px; font-weight: bold; font-size: 14px;
+            }
+            QPushButton:hover { background-color: %5; }
+        )").arg(Mocha::Base.name(), Mocha::Text.name(), Mocha::Surface.name(), Mocha::Hover.name(), Mocha::Accent.name());
+        
+        dlg.setStyleSheet(qss);
+
+        auto *layout = new QVBoxLayout(&dlg);
+        layout->setContentsMargins(20, 20, 20, 20);
+        
+        QFileInfo fi(filePath);
+        QString sizeStr = QString::number(fi.size() / (1024.0 * 1024.0), 'f', 2) + " MB";
+        
+        QString basicInfo = QString("File Name: %1\nSize: %2\nCreated: %3")
+                                .arg(fi.fileName(), sizeStr, fi.birthTime().toString("yyyy-MM-dd HH:mm:ss"));
+        
+        auto *lbl = new QLabel(basicInfo);
+        layout->addWidget(lbl);
+
+        QProcess ffprobe;
+        ffprobe.start("ffprobe", {"-hide_banner", filePath});
+        ffprobe.waitForFinished();
+        QString probeInfo = ffprobe.readAllStandardError(); 
+
+        auto *textEdit = new QTextEdit();
+        textEdit->setReadOnly(true);
+        textEdit->setText(probeInfo.isEmpty() ? "No additional media info available." : probeInfo);
+        layout->addWidget(textEdit);
+        
+        auto *btnOk = new RippleButton("Close");
+        QObject::connect(btnOk, &QPushButton::clicked, &dlg, &QDialog::accept);
+        
         layout->addWidget(btnOk, 0, Qt::AlignCenter);
         
         dlg.exec();
@@ -531,6 +597,10 @@ private:
                 background-color: %5; color: %1; border-radius: 8px; padding: 8px 16px; font-weight: bold;
             }
             QPushButton#btnBrowse:hover { background-color: %2; color: %4; }
+            QPushButton#btnInfo {
+                background-color: %5; color: %1; border-radius: 8px; padding: 8px 16px; font-weight: bold;
+            }
+            QPushButton#btnInfo:hover { background-color: %2; color: %4; }
             QPushButton#btnStart {
                 background-color: %2; color: %4; border-radius: 10px; padding: 12px;
                 font-size: 16px; font-weight: bold; margin-top: 10px;
@@ -586,9 +656,20 @@ private:
                 m_pathInput->setText(dialog.selectedFiles().first());
             }
         });
+
+        auto *infoBtn = new RippleButton("Info");
+        infoBtn->setObjectName("btnInfo");
+        connect(infoBtn, &QPushButton::clicked, this, [this]() {
+            if (m_pathInput->text().isEmpty() || !QFileInfo::exists(m_pathInput->text())) {
+                MochaMsgBox::showMsg(this, "Error", "Please select a valid input file first.", true);
+                return;
+            }
+            FileInfoBox::showInfo(this, m_pathInput->text());
+        });
         
         fileLayout->addWidget(m_pathInput);
         fileLayout->addWidget(browseBtn);
+        fileLayout->addWidget(infoBtn);
         cardLayout->addLayout(fileLayout);
 
         m_profileCombo = new QComboBox();
@@ -607,13 +688,57 @@ private:
 
         cardLayout->addWidget(m_profileCombo);
 
-        auto *startBtn = new RippleButton("🚀 Start Conversion");
+        auto *startBtn = new RippleButton("Start Conversion");
         startBtn->setObjectName("btnStart");
         connect(startBtn, &QPushButton::clicked, this, [this]() {
             if (m_pathInput->text().isEmpty() || !QFileInfo::exists(m_pathInput->text())) {
                 MochaMsgBox::showMsg(this, "Error", "Please select a valid input file first.", true);
                 return;
             }
+
+            QString inPath = m_pathInput->text();
+            QString profile = m_profileCombo->currentText();
+            QFileInfo fi(inPath);
+            QString ext = fi.suffix().toLower();
+
+            bool isInputVideo = MediaCategories::VideoExtensions.contains(ext);
+            bool isInputAudio = MediaCategories::AudioExtensions.contains(ext);
+            bool isInputImage = MediaCategories::ImageExtensions.contains(ext);
+
+            bool isOutputVideo = MediaCategories::VideoProfiles.contains(profile);
+            bool isOutputAudio = MediaCategories::AudioProfiles.contains(profile);
+            bool isOutputImage = MediaCategories::ImageProfiles.contains(profile);
+
+            bool valid = false;
+            QString errorMsg;
+
+            if (isInputVideo) {
+                if (isOutputVideo || isOutputAudio) {
+                    valid = true;
+                } else {
+                    errorMsg = "Videos can only be converted to videos or audios.";
+                }
+            } else if (isInputAudio) {
+                if (isOutputAudio) {
+                    valid = true;
+                } else {
+                    errorMsg = "Audios can only be converted to audios.";
+                }
+            } else if (isInputImage) {
+                if (isOutputImage) {
+                    valid = true;
+                } else {
+                    errorMsg = "Images can only be converted to images.";
+                }
+            } else {
+                valid = true; 
+            }
+
+            if (!valid) {
+                MochaMsgBox::showMsg(this, "Conversion Not Allowed", errorMsg, true);
+                return;
+            }
+
             auto *converter = new ModernConverterWindow(m_profileCombo->currentText(), m_pathInput->text());
             converter->show();
             this->close();
@@ -627,14 +752,14 @@ private:
         footerLayout->setAlignment(Qt::AlignCenter);
         footerLayout->setSpacing(20);
 
-        auto *githubBtn = new QPushButton("🌐 GitHub");
+        auto *githubBtn = new QPushButton("GitHub");
         githubBtn->setObjectName("btnLink");
         githubBtn->setCursor(Qt::PointingHandCursor);
         connect(githubBtn, &QPushButton::clicked, [](){
             QDesktopServices::openUrl(QUrl("https://github.com/ahmed-x86/media_mesh"));
         });
 
-        auto *issueBtn = new QPushButton("🐛 Report Issue");
+        auto *issueBtn = new QPushButton("Report Issue");
         issueBtn->setObjectName("btnLink");
         issueBtn->setCursor(Qt::PointingHandCursor);
         connect(issueBtn, &QPushButton::clicked, [](){
