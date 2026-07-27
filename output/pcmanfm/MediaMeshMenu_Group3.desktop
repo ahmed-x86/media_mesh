@@ -11,17 +11,17 @@ Type=Action
 Name=Media Mesh Convert
 Icon=video-x-generic
 Profiles=default;
-MimeTypes=image/bmp;image/gif;image/jpeg;image/png;image/vnd.microsoft.icon;image/webp;text/vnd.trolltech.linguist;video/mp4;video/quicktime;video/webm;video/x-flv;video/x-matroska;video/x-ms-wmv;video/x-msvideo;
+MimeTypes=audio/aac;audio/mp4;audio/mpeg;audio/ogg;audio/x-flac;audio/x-wav;text/vnd.trolltech.linguist;video/mp4;video/quicktime;video/webm;video/x-flv;video/x-matroska;video/x-ms-wmv;video/x-msvideo;
 TargetLocation=true
 Actions=Action0;Action1;
 
 [Desktop Action Action0]
-Name=Convert to GIF
-Icon=image-x-generic
-Exec=media_mesh -gif %F
+Name=Extract Audio (MP3)
+Icon=audio-x-generic
+Exec=media_mesh -mp3 %F
 
 [Desktop Action Action1]
-Name=Convert to WEBP
-Icon=image-x-generic
-Exec=media_mesh -webp %F
+Name=Extract Audio (AAC)
+Icon=audio-x-generic
+Exec=media_mesh -aac %F
 
