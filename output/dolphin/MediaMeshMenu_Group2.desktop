@@ -1,0 +1,26 @@
+# MediaMeshMenu — ClickMesh-generated service menu for Dolphin (KDE).
+#
+# Installation:
+#   KDE Plasma 5 :  ~/.local/share/kservices5/ServiceMenus/
+#   KDE Plasma 6 :  ~/.local/share/kio/servicemenus/
+#
+# After copying, restart Dolphin or run:  kbuildsycoca6 (or kbuildsycoca5)
+
+[Desktop Entry]
+Type=Service
+X-KDE-ServiceTypes=KonqPopupMenu/Plugin
+MimeType=audio/aac;audio/mp4;audio/mpeg;audio/ogg;audio/x-flac;audio/x-wav;text/vnd.trolltech.linguist;video/mp4;video/quicktime;video/webm;video/x-flv;video/x-matroska;video/x-ms-wmv;video/x-msvideo;
+X-KDE-Submenu=Media Mesh Convert
+Icon=video-x-generic
+Actions=Action0;Action1;
+
+[Desktop Action Action0]
+Name=Extract Audio (MP3)
+Icon=audio-x-generic
+Exec=media_mesh -mp3 %F
+
+[Desktop Action Action1]
+Name=Extract Audio (AAC)
+Icon=audio-x-generic
+Exec=media_mesh -aac %F
+
