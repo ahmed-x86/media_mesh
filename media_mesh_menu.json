@@ -1,0 +1,209 @@
+{
+    "project_name": "MediaMeshMenu",
+    "target_file_managers": [
+        "nautilus",
+        "nemo",
+        "dolphin",
+        "thunar",
+        "pcmanfm",
+        "caja"
+    ],
+    "menu": {
+        "title": "Media Mesh Convert",
+        "icon": "video-x-generic",
+        "extensions": [
+            ".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts",
+            ".mp3", ".aac", ".wav", ".flac", ".ogg", ".m4a",
+            ".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp", ".ico"
+        ],
+        "directories": false,
+        "sub_items": [
+            {
+                "name": "MP4 (CPU)",
+                "command": "media_mesh -mp4 %file",
+                "icon": "video-x-generic",
+                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
+            },
+            {
+                "name": "MP4 (NVIDIA NVENC)",
+                "command": "media_mesh -mp4_nvenc %file",
+                "icon": "video-x-generic",
+                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
+            },
+            {
+                "name": "MP4 (AMD VAAPI)",
+                "command": "media_mesh -mp4_amd_vaapi %file",
+                "icon": "video-x-generic",
+                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
+            },
+            {
+                "name": "MP4 (CUDA Decode)",
+                "command": "media_mesh -mp4_cuda %file",
+                "icon": "video-x-generic",
+                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
+            },
+            {
+                "name": "MP4 (AMD Decode)",
+                "command": "media_mesh -mp4_amd %file",
+                "icon": "video-x-generic",
+                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
+            },
+            {
+                "name": "MKV (CPU)",
+                "command": "media_mesh -mkv %file",
+                "icon": "video-x-generic",
+                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
+            },
+            {
+                "name": "MKV (NVIDIA NVENC)",
+                "command": "media_mesh -mkv_nvenc %file",
+                "icon": "video-x-generic",
+                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
+            },
+            {
+                "name": "MKV (AMD VAAPI)",
+                "command": "media_mesh -mkv_amd_vaapi %file",
+                "icon": "video-x-generic",
+                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
+            },
+            {
+                "name": "MKV (CUDA Decode)",
+                "command": "media_mesh -mkv_cuda %file",
+                "icon": "video-x-generic",
+                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
+            },
+            {
+                "name": "MKV (AMD Decode)",
+                "command": "media_mesh -mkv_amd %file",
+                "icon": "video-x-generic",
+                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
+            },
+            {
+                "name": "WEBM (CPU VP9)",
+                "command": "media_mesh -webm %file",
+                "icon": "video-x-generic",
+                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
+            },
+            {
+                "name": "WEBM (NVIDIA AV1)",
+                "command": "media_mesh -webm_nvenc %file",
+                "icon": "video-x-generic",
+                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
+            },
+            {
+                "name": "WEBM (AMD VAAPI)",
+                "command": "media_mesh -webm_amd_vaapi %file",
+                "icon": "video-x-generic",
+                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
+            },
+            {
+                "name": "WEBM (CUDA Decode)",
+                "command": "media_mesh -webm_cuda %file",
+                "icon": "video-x-generic",
+                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
+            },
+            {
+                "name": "WEBM (AMD Decode)",
+                "command": "media_mesh -webm_amd %file",
+                "icon": "video-x-generic",
+                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
+            },
+            {
+                "name": "AV1 (SVT-AV1 CPU)",
+                "command": "media_mesh -av1 %file",
+                "icon": "video-x-generic",
+                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
+            },
+            {
+                "name": "DaVinci Resolve (DNxHD CPU)",
+                "command": "media_mesh -davinci %file",
+                "icon": "video-x-generic",
+                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
+            },
+            {
+                "name": "DaVinci Resolve (CUDA Full)",
+                "command": "media_mesh -davinci_cuda_full %file",
+                "icon": "video-x-generic",
+                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
+            },
+            {
+                "name": "DaVinci Resolve (AMD Full)",
+                "command": "media_mesh -davinci_amd_full %file",
+                "icon": "video-x-generic",
+                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
+            },
+            {
+                "name": "ProRes (HQ CPU)",
+                "command": "media_mesh -prores %file",
+                "icon": "video-x-generic",
+                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
+            },
+            {
+                "name": "ProRes (CUDA Full)",
+                "command": "media_mesh -prores_cuda_full %file",
+                "icon": "video-x-generic",
+                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
+            },
+            {
+                "name": "ProRes (AMD Full)",
+                "command": "media_mesh -prores_amd_full %file",
+                "icon": "video-x-generic",
+                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
+            },
+            {
+                "name": "Extract Audio (MP3)",
+                "command": "media_mesh -mp3 %file",
+                "icon": "audio-x-generic",
+                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts", ".mp3", ".aac", ".wav", ".flac", ".ogg", ".m4a"]
+            },
+            {
+                "name": "Extract Audio (AAC)",
+                "command": "media_mesh -aac %file",
+                "icon": "audio-x-generic",
+                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts", ".mp3", ".aac", ".wav", ".flac", ".ogg", ".m4a"]
+            },
+            {
+                "name": "Convert to GIF",
+                "command": "media_mesh -gif %file",
+                "icon": "image-x-generic",
+                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts", ".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp", ".ico"]
+            },
+            {
+                "name": "Convert to WEBP",
+                "command": "media_mesh -webp %file",
+                "icon": "image-x-generic",
+                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts", ".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp", ".ico"]
+            },
+            {
+                "name": "Convert to JPG",
+                "command": "media_mesh -jpg %file",
+                "icon": "image-x-generic",
+                "supported_extensions": [".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp", ".ico"]
+            },
+            {
+                "name": "Convert to BMP",
+                "command": "media_mesh -bmp %file",
+                "icon": "image-x-generic",
+                "supported_extensions": [".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp", ".ico"]
+            },
+            {
+                "name": "Convert to ICO",
+                "command": "media_mesh -ico %file",
+                "icon": "image-x-generic",
+                "supported_extensions": [".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp", ".ico"]
+            },
+            {
+                "name": "Extract Subtitles (SRT)",
+                "command": "media_mesh -srt %file",
+                "icon": "text-x-generic",
+                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".ts"]
+            },
+            {
+                "name": "Extract Subtitles (VTT)",
+                "command": "media_mesh -vtt %file",
+                "icon": "text-x-generic",
+                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".ts"]
+            }
+        ]
+    }
+}
