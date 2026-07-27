@@ -795,6 +795,12 @@ int main(int argc, char *argv[]) {
             MochaMsgBox::showMsg(nullptr, "Error", "The provided input file does not exist.\n\n" + inputFile, true);
             return 1;
         }
+        
+        if (profile == "info") {
+            FileInfoBox::showInfo(nullptr, inputFile);
+            return 0;
+        }
+
         ModernConverterWindow window(profile, inputFile);
         window.show();
         return app.exec();
