@@ -19,6 +19,16 @@
         "directories": false,
         "sub_items": [
             {
+                "name": "Show Media Info",
+                "command": "media_mesh -info %file",
+                "icon": "dialog-information",
+                "supported_extensions": [
+                    ".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts",
+                    ".mp3", ".aac", ".wav", ".flac", ".ogg", ".m4a",
+                    ".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp", ".ico"
+                ]
+            },
+            {
                 "name": "MP4 (CPU)",
                 "command": "media_mesh -mp4 %file",
                 "icon": "video-x-generic",
