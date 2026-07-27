@@ -1,0 +1,27 @@
+# MediaMeshMenu — ClickMesh-generated custom action for PCManFM / PCManFM-Qt.
+#
+# Installation:
+#   PCManFM (GTK)  :  ~/.local/share/file-manager/actions/
+#   PCManFM-Qt     :  ~/.local/share/file-manager/actions/
+#
+# After copying, restart PCManFM to pick up the new actions.
+
+[Desktop Entry]
+Type=Action
+Name=Media Mesh Convert
+Icon=video-x-generic
+Profiles=default;
+MimeTypes=text/vnd.trolltech.linguist;video/mp4;video/quicktime;video/webm;video/x-matroska;video/x-msvideo;
+TargetLocation=true
+Actions=Action0;Action1;
+
+[Desktop Action Action0]
+Name=Extract Subtitles (SRT)
+Icon=text-x-generic
+Exec=media_mesh -srt %F
+
+[Desktop Action Action1]
+Name=Extract Subtitles (VTT)
+Icon=text-x-generic
+Exec=media_mesh -vtt %F
+
