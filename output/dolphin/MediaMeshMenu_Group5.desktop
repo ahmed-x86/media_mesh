@@ -9,18 +9,23 @@
 [Desktop Entry]
 Type=Service
 X-KDE-ServiceTypes=KonqPopupMenu/Plugin
-MimeType=text/vnd.trolltech.linguist;video/mp4;video/quicktime;video/webm;video/x-matroska;video/x-msvideo;
+MimeType=image/bmp;image/gif;image/jpeg;image/png;image/vnd.microsoft.icon;image/webp;
 X-KDE-Submenu=Media Mesh Convert
 Icon=video-x-generic
-Actions=Action0;Action1;
+Actions=Action0;Action1;Action2;
 
 [Desktop Action Action0]
-Name=Extract Subtitles (SRT)
-Icon=text-x-generic
-Exec=media_mesh -srt %F
+Name=Convert to JPG
+Icon=image-x-generic
+Exec=media_mesh -jpg %F
 
 [Desktop Action Action1]
-Name=Extract Subtitles (VTT)
-Icon=text-x-generic
-Exec=media_mesh -vtt %F
+Name=Convert to BMP
+Icon=image-x-generic
+Exec=media_mesh -bmp %F
+
+[Desktop Action Action2]
+Name=Convert to ICO
+Icon=image-x-generic
+Exec=media_mesh -ico %F
 
