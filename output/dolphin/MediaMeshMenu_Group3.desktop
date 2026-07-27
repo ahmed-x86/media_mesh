@@ -1,0 +1,26 @@
+# MediaMeshMenu — ClickMesh-generated service menu for Dolphin (KDE).
+#
+# Installation:
+#   KDE Plasma 5 :  ~/.local/share/kservices5/ServiceMenus/
+#   KDE Plasma 6 :  ~/.local/share/kio/servicemenus/
+#
+# After copying, restart Dolphin or run:  kbuildsycoca6 (or kbuildsycoca5)
+
+[Desktop Entry]
+Type=Service
+X-KDE-ServiceTypes=KonqPopupMenu/Plugin
+MimeType=image/bmp;image/gif;image/jpeg;image/png;image/vnd.microsoft.icon;image/webp;text/vnd.trolltech.linguist;video/mp4;video/quicktime;video/webm;video/x-flv;video/x-matroska;video/x-ms-wmv;video/x-msvideo;
+X-KDE-Submenu=Media Mesh Convert
+Icon=video-x-generic
+Actions=Action0;Action1;
+
+[Desktop Action Action0]
+Name=Convert to GIF
+Icon=image-x-generic
+Exec=media_mesh -gif %F
+
+[Desktop Action Action1]
+Name=Convert to WEBP
+Icon=image-x-generic
+Exec=media_mesh -webp %F
+
