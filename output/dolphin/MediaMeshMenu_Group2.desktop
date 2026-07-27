@@ -9,18 +9,118 @@
 [Desktop Entry]
 Type=Service
 X-KDE-ServiceTypes=KonqPopupMenu/Plugin
-MimeType=audio/aac;audio/mp4;audio/mpeg;audio/ogg;audio/x-flac;audio/x-wav;text/vnd.trolltech.linguist;video/mp4;video/quicktime;video/webm;video/x-flv;video/x-matroska;video/x-ms-wmv;video/x-msvideo;
+MimeType=text/vnd.trolltech.linguist;video/mp4;video/quicktime;video/webm;video/x-flv;video/x-matroska;video/x-ms-wmv;video/x-msvideo;
 X-KDE-Submenu=Media Mesh Convert
 Icon=video-x-generic
-Actions=Action0;Action1;
+Actions=Action0;Action1;Action2;Action3;Action4;Action5;Action6;Action7;Action8;Action9;Action10;Action11;Action12;Action13;Action14;Action15;Action16;Action17;Action18;Action19;Action20;Action21;
 
 [Desktop Action Action0]
-Name=Extract Audio (MP3)
-Icon=audio-x-generic
-Exec=media_mesh -mp3 %F
+Name=MP4 (CPU)
+Icon=video-x-generic
+Exec=media_mesh -mp4 %F
 
 [Desktop Action Action1]
-Name=Extract Audio (AAC)
-Icon=audio-x-generic
-Exec=media_mesh -aac %F
+Name=MP4 (NVIDIA NVENC)
+Icon=video-x-generic
+Exec=media_mesh -mp4_nvenc %F
+
+[Desktop Action Action2]
+Name=MP4 (AMD VAAPI)
+Icon=video-x-generic
+Exec=media_mesh -mp4_amd_vaapi %F
+
+[Desktop Action Action3]
+Name=MP4 (CUDA Decode)
+Icon=video-x-generic
+Exec=media_mesh -mp4_cuda %F
+
+[Desktop Action Action4]
+Name=MP4 (AMD Decode)
+Icon=video-x-generic
+Exec=media_mesh -mp4_amd %F
+
+[Desktop Action Action5]
+Name=MKV (CPU)
+Icon=video-x-generic
+Exec=media_mesh -mkv %F
+
+[Desktop Action Action6]
+Name=MKV (NVIDIA NVENC)
+Icon=video-x-generic
+Exec=media_mesh -mkv_nvenc %F
+
+[Desktop Action Action7]
+Name=MKV (AMD VAAPI)
+Icon=video-x-generic
+Exec=media_mesh -mkv_amd_vaapi %F
+
+[Desktop Action Action8]
+Name=MKV (CUDA Decode)
+Icon=video-x-generic
+Exec=media_mesh -mkv_cuda %F
+
+[Desktop Action Action9]
+Name=MKV (AMD Decode)
+Icon=video-x-generic
+Exec=media_mesh -mkv_amd %F
+
+[Desktop Action Action10]
+Name=WEBM (CPU VP9)
+Icon=video-x-generic
+Exec=media_mesh -webm %F
+
+[Desktop Action Action11]
+Name=WEBM (NVIDIA AV1)
+Icon=video-x-generic
+Exec=media_mesh -webm_nvenc %F
+
+[Desktop Action Action12]
+Name=WEBM (AMD VAAPI)
+Icon=video-x-generic
+Exec=media_mesh -webm_amd_vaapi %F
+
+[Desktop Action Action13]
+Name=WEBM (CUDA Decode)
+Icon=video-x-generic
+Exec=media_mesh -webm_cuda %F
+
+[Desktop Action Action14]
+Name=WEBM (AMD Decode)
+Icon=video-x-generic
+Exec=media_mesh -webm_amd %F
+
+[Desktop Action Action15]
+Name=AV1 (SVT-AV1 CPU)
+Icon=video-x-generic
+Exec=media_mesh -av1 %F
+
+[Desktop Action Action16]
+Name=DaVinci Resolve (DNxHD CPU)
+Icon=video-x-generic
+Exec=media_mesh -davinci %F
+
+[Desktop Action Action17]
+Name=DaVinci Resolve (CUDA Full)
+Icon=video-x-generic
+Exec=media_mesh -davinci_cuda_full %F
+
+[Desktop Action Action18]
+Name=DaVinci Resolve (AMD Full)
+Icon=video-x-generic
+Exec=media_mesh -davinci_amd_full %F
+
+[Desktop Action Action19]
+Name=ProRes (HQ CPU)
+Icon=video-x-generic
+Exec=media_mesh -prores %F
+
+[Desktop Action Action20]
+Name=ProRes (CUDA Full)
+Icon=video-x-generic
+Exec=media_mesh -prores_cuda_full %F
+
+[Desktop Action Action21]
+Name=ProRes (AMD Full)
+Icon=video-x-generic
+Exec=media_mesh -prores_amd_full %F
 
