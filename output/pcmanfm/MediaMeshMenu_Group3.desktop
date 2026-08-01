@@ -13,7 +13,7 @@ Icon=video-x-generic
 Profiles=default;
 MimeTypes=audio/aac;audio/mp4;audio/mpeg;audio/ogg;audio/x-flac;audio/x-wav;text/vnd.trolltech.linguist;video/mp4;video/quicktime;video/webm;video/x-flv;video/x-matroska;video/x-ms-wmv;video/x-msvideo;
 TargetLocation=true
-Actions=Action0;Action1;
+Actions=Action0;Action1;Action2;
 
 [Desktop Action Action0]
 Name=Extract Audio (MP3)
@@ -24,4 +24,9 @@ Exec=media_mesh -mp3 %F
 Name=Extract Audio (AAC)
 Icon=audio-x-generic
 Exec=media_mesh -aac %F
+
+[Desktop Action Action2]
+Name=Extract Audio (WAV)
+Icon=audio-x-generic
+Exec=media_mesh -wav %F
 
