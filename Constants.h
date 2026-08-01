@@ -9,7 +9,7 @@ namespace MediaCategories {
 
     inline const QStringList ImageProfiles = {"gif", "jpg", "jpeg", "webp", "ico", "bmp"};
     inline const QStringList VideoProfiles = {"mp4", "mp4_nvenc", "mp4_amd_vaapi", "mkv", "webm", "av1", "davinci_cuda_full", "davinci_amd_full", "prores_cuda_full"};
-    inline const QStringList AudioProfiles = {"mp3", "aac"};
+    inline const QStringList AudioProfiles = {"mp3", "aac", "wav"};
 }
 
 namespace Mocha {
