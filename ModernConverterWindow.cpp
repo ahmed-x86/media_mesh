@@ -15,9 +15,8 @@
 #include <QMap>
 #include <QDBusConnection>
 #include <QDBusMessage>
-#include <QDBusPendingCall> // <-- تمت إضافة هذه المكتبة لحل الخطأ
+#include <QDBusPendingCall>
 
-// الهيكل الجديد الذي حل محل سلسلة if/else الطويلة
 struct FFmpegSettings {
     QStringList preInputArgs;
     QStringList postInputArgs;
@@ -48,6 +47,7 @@ static const QMap<QString, FFmpegSettings> ffmpegProfiles = {
     {"av1",               {{}, {"-hide_banner", "-loglevel", "error", "-stats", "-c:v", "libsvtav1", "-preset", "6", "-crf", "30", "-c:a", "libopus"}}},
     {"aac",               {{}, {"-vn", "-c:a", "aac", "-b:a", "192k"}}},
     {"mp3",               {{}, {"-vn", "-c:a", "libmp3lame", "-b:a", "192k"}}},
+    {"wav",               {{}, {"-vn", "-c:a", "pcm_s16le"}}},
     {"srt",               {{}, {"-hide_banner", "-loglevel", "error"}}},
     {"vtt",               {{}, {"-hide_banner", "-loglevel", "error"}}},
     {"gif",               {{}, {"-vf", "fps=15,scale=720:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse"}}},
