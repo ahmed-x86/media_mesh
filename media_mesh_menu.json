@@ -173,6 +173,12 @@
                 "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts", ".mp3", ".aac", ".wav", ".flac", ".ogg", ".m4a"]
             },
             {
+                "name": "Extract Audio (WAV)",
+                "command": "media_mesh -wav %file",
+                "icon": "audio-x-generic",
+                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts", ".mp3", ".aac", ".wav", ".flac", ".ogg", ".m4a"]
+            },
+            {
                 "name": "Convert to GIF",
                 "command": "media_mesh -gif %file",
                 "icon": "image-x-generic",
