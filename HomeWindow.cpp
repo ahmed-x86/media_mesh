@@ -227,7 +227,7 @@ void HomeWindow::setupUI() {
     browseBtn->setObjectName("btnBrowse");
     connect(browseBtn, &QPushButton::clicked, this, [this]() {
         QFileDialog dialog(nullptr, "Select Media File");
-        dialog.setNameFilter("Media Files (*.mp4 *.mkv *.webm *.mov *.avi *.mp3 *.aac *.gif *.jpg *.png *.webp);;All Files (*)");
+        dialog.setNameFilter("Media Files (*.mp4 *.mkv *.webm *.mov *.avi *.mp3 *.aac *.wav *.gif *.jpg *.png *.webp);;All Files (*)");
         if (dialog.exec() == QDialog::Accepted) {
             m_pathInput->setText(dialog.selectedFiles().first());
         }
@@ -252,7 +252,7 @@ void HomeWindow::setupUI() {
     QStringList profiles = {
         "mp4", "mp4_nvenc", "mp4_amd_vaapi", "mkv", "webm", "av1", 
         "davinci_cuda_full", "davinci_amd_full", "prores_cuda_full", 
-        "mp3", "aac", "gif", "jpg", "webp"
+        "mp3", "aac", "wav", "gif", "jpg", "webp"
     };
     m_profileCombo->addItems(profiles);
     m_profileCombo->setItemDelegate(new QStyledItemDelegate(this));
