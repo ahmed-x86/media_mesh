@@ -13,6 +13,9 @@
 #include <QRegularExpression>
 #include <QApplication>
 #include <QMap>
+#include <QDBusConnection>
+#include <QDBusMessage>
+#include <QDBusPendingCall> // <-- تمت إضافة هذه المكتبة لحل الخطأ
 
 // الهيكل الجديد الذي حل محل سلسلة if/else الطويلة
 struct FFmpegSettings {
@@ -192,7 +195,6 @@ void ModernConverterWindow::fetchMediaDuration() {
     startFFmpeg();
 }
 
-// هنا تم تطبيق الماب (QMap) لتبسيط الكود وتسهيل الصيانة
 void ModernConverterWindow::startFFmpeg() {
     m_ffmpegProcess = new QProcess(this);
     connect(m_ffmpegProcess, &QProcess::readyReadStandardError, this, &ModernConverterWindow::onFfmpegReadyRead);
@@ -289,8 +291,12 @@ void ModernConverterWindow::onFfmpegFinished(int exitCode, QProcess::ExitStatus 
         m_progressBar->setValue(100);
         m_progressBar->setFormat("100%");
         m_valETA->setText("00:00:00");
+        sendNotification("Conversion Complete", "Successfully converted:\n" + m_outputFile, false);
+        
         MochaMsgBox::showMsg(this, "Success", "Conversion completed successfully!\n\n" + m_outputFile, false);
     } else {
+        sendNotification("Conversion Failed", "The conversion process was canceled or failed.", true);
+        
         MochaMsgBox::showMsg(this, "Error", "Conversion failed or was canceled.", true);
     }
     close();
@@ -301,4 +307,30 @@ void ModernConverterWindow::cancelConversion() {
         m_ffmpegProcess->kill();
     }
     close();
+}
+
+void ModernConverterWindow::sendNotification(const QString &title, const QString &message, bool isError) {
+
+    QDBusMessage msg = QDBusMessage::createMethodCall(
+        "org.freedesktop.Notifications", 
+        "/org/freedesktop/Notifications", 
+        "org.freedesktop.Notifications", 
+        "Notify"
+    );
+
+    QString iconName = isError ? "dialog-error" : "video-x-generic";
+
+    QList<QVariant> args;
+    args.append("Media Mesh");
+    args.append(0U);
+    args.append(iconName);
+    args.append(title);
+    args.append(message);
+    args.append(QStringList());
+    args.append(QVariantMap());
+    args.append(5000);
+
+    msg.setArguments(args);
+
+    QDBusConnection::sessionBus().asyncCall(msg);
 }
