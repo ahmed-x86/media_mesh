@@ -453,6 +453,23 @@ def _on_action_24(menu_item, files):
 
 
 def _on_action_25(menu_item, files):
+    """Callback: Extract Audio (WAV)"""
+    for file_item in files:
+        path = _path_from_item(file_item)
+        cmd = 'media_mesh -wav %file'.replace("%file", shlex.quote(path))
+        try:
+            subprocess.Popen(
+                cmd,
+                shell=True,
+                start_new_session=True,
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+            )
+        except Exception as exc:  # noqa: BLE001
+            print(f"[ClickMesh] Error in 'Extract Audio (WAV)': {exc}")
+
+
+def _on_action_26(menu_item, files):
     """Callback: Convert to GIF"""
     for file_item in files:
         path = _path_from_item(file_item)
@@ -469,7 +486,7 @@ def _on_action_25(menu_item, files):
             print(f"[ClickMesh] Error in 'Convert to GIF': {exc}")
 
 
-def _on_action_26(menu_item, files):
+def _on_action_27(menu_item, files):
     """Callback: Convert to WEBP"""
     for file_item in files:
         path = _path_from_item(file_item)
@@ -486,7 +503,7 @@ def _on_action_26(menu_item, files):
             print(f"[ClickMesh] Error in 'Convert to WEBP': {exc}")
 
 
-def _on_action_27(menu_item, files):
+def _on_action_28(menu_item, files):
     """Callback: Convert to JPG"""
     for file_item in files:
         path = _path_from_item(file_item)
@@ -503,7 +520,7 @@ def _on_action_27(menu_item, files):
             print(f"[ClickMesh] Error in 'Convert to JPG': {exc}")
 
 
-def _on_action_28(menu_item, files):
+def _on_action_29(menu_item, files):
     """Callback: Convert to BMP"""
     for file_item in files:
         path = _path_from_item(file_item)
@@ -520,7 +537,7 @@ def _on_action_28(menu_item, files):
             print(f"[ClickMesh] Error in 'Convert to BMP': {exc}")
 
 
-def _on_action_29(menu_item, files):
+def _on_action_30(menu_item, files):
     """Callback: Convert to ICO"""
     for file_item in files:
         path = _path_from_item(file_item)
@@ -537,7 +554,7 @@ def _on_action_29(menu_item, files):
             print(f"[ClickMesh] Error in 'Convert to ICO': {exc}")
 
 
-def _on_action_30(menu_item, files):
+def _on_action_31(menu_item, files):
     """Callback: Extract Subtitles (SRT)"""
     for file_item in files:
         path = _path_from_item(file_item)
@@ -554,7 +571,7 @@ def _on_action_30(menu_item, files):
             print(f"[ClickMesh] Error in 'Extract Subtitles (SRT)': {exc}")
 
 
-def _on_action_31(menu_item, files):
+def _on_action_32(menu_item, files):
     """Callback: Extract Subtitles (VTT)"""
     for file_item in files:
         path = _path_from_item(file_item)
@@ -1155,7 +1172,7 @@ class MediameshmenuExtension(GObject.GObject, Nautilus.MenuProvider):
             item_24.connect("activate", _on_action_24, files)
             submenu.append_item(item_24)
             items_added += 1
-        item_25_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts', '.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp', '.ico')
+        item_25_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts', '.mp3', '.aac', '.wav', '.flac', '.ogg', '.m4a')
         item_25_allow_all = False
         show_item_25 = False
 
@@ -1170,9 +1187,9 @@ class MediameshmenuExtension(GObject.GObject, Nautilus.MenuProvider):
         if show_item_25:
             item_25 = Nautilus.MenuItem(
                 name="MediaMeshMenu::Action25",
-                label="Convert to GIF",
-                tip="Convert to GIF",
-                icon="image-x-generic",
+                label="Extract Audio (WAV)",
+                tip="Extract Audio (WAV)",
+                icon="audio-x-generic",
             )
             item_25.connect("activate", _on_action_25, files)
             submenu.append_item(item_25)
@@ -1192,14 +1209,14 @@ class MediameshmenuExtension(GObject.GObject, Nautilus.MenuProvider):
         if show_item_26:
             item_26 = Nautilus.MenuItem(
                 name="MediaMeshMenu::Action26",
-                label="Convert to WEBP",
-                tip="Convert to WEBP",
+                label="Convert to GIF",
+                tip="Convert to GIF",
                 icon="image-x-generic",
             )
             item_26.connect("activate", _on_action_26, files)
             submenu.append_item(item_26)
             items_added += 1
-        item_27_exts = ('.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp', '.ico')
+        item_27_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts', '.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp', '.ico')
         item_27_allow_all = False
         show_item_27 = False
 
@@ -1214,8 +1231,8 @@ class MediameshmenuExtension(GObject.GObject, Nautilus.MenuProvider):
         if show_item_27:
             item_27 = Nautilus.MenuItem(
                 name="MediaMeshMenu::Action27",
-                label="Convert to JPG",
-                tip="Convert to JPG",
+                label="Convert to WEBP",
+                tip="Convert to WEBP",
                 icon="image-x-generic",
             )
             item_27.connect("activate", _on_action_27, files)
@@ -1236,8 +1253,8 @@ class MediameshmenuExtension(GObject.GObject, Nautilus.MenuProvider):
         if show_item_28:
             item_28 = Nautilus.MenuItem(
                 name="MediaMeshMenu::Action28",
-                label="Convert to BMP",
-                tip="Convert to BMP",
+                label="Convert to JPG",
+                tip="Convert to JPG",
                 icon="image-x-generic",
             )
             item_28.connect("activate", _on_action_28, files)
@@ -1258,14 +1275,14 @@ class MediameshmenuExtension(GObject.GObject, Nautilus.MenuProvider):
         if show_item_29:
             item_29 = Nautilus.MenuItem(
                 name="MediaMeshMenu::Action29",
-                label="Convert to ICO",
-                tip="Convert to ICO",
+                label="Convert to BMP",
+                tip="Convert to BMP",
                 icon="image-x-generic",
             )
             item_29.connect("activate", _on_action_29, files)
             submenu.append_item(item_29)
             items_added += 1
-        item_30_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.ts')
+        item_30_exts = ('.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp', '.ico')
         item_30_allow_all = False
         show_item_30 = False
 
@@ -1280,9 +1297,9 @@ class MediameshmenuExtension(GObject.GObject, Nautilus.MenuProvider):
         if show_item_30:
             item_30 = Nautilus.MenuItem(
                 name="MediaMeshMenu::Action30",
-                label="Extract Subtitles (SRT)",
-                tip="Extract Subtitles (SRT)",
-                icon="text-x-generic",
+                label="Convert to ICO",
+                tip="Convert to ICO",
+                icon="image-x-generic",
             )
             item_30.connect("activate", _on_action_30, files)
             submenu.append_item(item_30)
@@ -1302,12 +1319,34 @@ class MediameshmenuExtension(GObject.GObject, Nautilus.MenuProvider):
         if show_item_31:
             item_31 = Nautilus.MenuItem(
                 name="MediaMeshMenu::Action31",
-                label="Extract Subtitles (VTT)",
-                tip="Extract Subtitles (VTT)",
+                label="Extract Subtitles (SRT)",
+                tip="Extract Subtitles (SRT)",
                 icon="text-x-generic",
             )
             item_31.connect("activate", _on_action_31, files)
             submenu.append_item(item_31)
+            items_added += 1
+        item_32_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.ts')
+        item_32_allow_all = False
+        show_item_32 = False
+
+        if has_dir and allow_dirs:
+            show_item_32 = True
+        elif has_file:
+            if item_32_allow_all:
+                show_item_32 = True
+            else:
+                show_item_32 = any(any(p.lower().endswith(ext) for ext in item_32_exts) for p in paths if not os.path.isdir(p))
+
+        if show_item_32:
+            item_32 = Nautilus.MenuItem(
+                name="MediaMeshMenu::Action32",
+                label="Extract Subtitles (VTT)",
+                tip="Extract Subtitles (VTT)",
+                icon="text-x-generic",
+            )
+            item_32.connect("activate", _on_action_32, files)
+            submenu.append_item(item_32)
             items_added += 1
         if items_added == 0:
             return []
