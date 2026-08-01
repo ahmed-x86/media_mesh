@@ -7,6 +7,10 @@
 #include <QProgressBar>
 #include <QLabel>
 
+// إضافة مكتبات DBus
+#include <QDBusConnection>
+#include <QDBusMessage>
+
 class ModernConverterWindow : public QWidget {
     Q_OBJECT
 
@@ -39,4 +43,6 @@ private:
     void setupUI();
     void fetchMediaDuration();
     void startFFmpeg();
+
+    void sendNotification(const QString &title, const QString &message, bool isError = false);
 };
