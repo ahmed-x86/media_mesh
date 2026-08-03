@@ -64,3 +64,9 @@ mkdir -p ~/.local/share/nautilus/scripts
 cp nautilus/MediaMeshMenu.py ~/.local/share/nautilus/scripts/
 chmod +x ~/.local/share/nautilus/scripts/MediaMeshMenu.py
 ```
+### 4. Nemo (Cinnamon File Manager)
+```bash
+mkdir -p ~/.local/share/nemo/actions
+cp nemo/MediaMeshMenu.py ~/.local/share/nemo/actions/
+chmod +x ~/.local/share/nemo/actions/MediaMeshMenu.py
+```
