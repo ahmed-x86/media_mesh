@@ -47,3 +47,9 @@ First, navigate to the output directory:
 ```bash
 cd output
 ```
+### 1. Caja (MATE File Manager)
+```bash
+mkdir -p ~/.local/share/caja/scripts
+cp caja/MediaMeshMenu.py ~/.local/share/caja/scripts/
+chmod +x ~/.local/share/caja/scripts/MediaMeshMenu.py
+```
