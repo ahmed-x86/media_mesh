@@ -36,3 +36,4 @@ for fast build
 cmake . && make -j$(nproc)  
 ```
 ## install in system
+it is well not work without make `media_mesh` command in system
