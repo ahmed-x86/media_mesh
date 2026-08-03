@@ -35,3 +35,4 @@ for fast build
 ```bash
 cmake . && make -j$(nproc)  
 ```
+## install in system
