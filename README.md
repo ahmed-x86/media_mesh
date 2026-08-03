@@ -31,3 +31,7 @@ and build it
 ```bash
 cmake . && make 
 ```
+for fast build
+```bash
+cmake . && make -j$(nproc)  
+```
