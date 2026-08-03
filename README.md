@@ -58,3 +58,9 @@ chmod +x ~/.local/share/caja/scripts/MediaMeshMenu.py
 mkdir -p ~/.local/share/kio/servicemenus
 cp dolphin/*.desktop ~/.local/share/kio/servicemenus/
 ```
+### 3. Nautilus (GNOME File Manager)
+```bash
+mkdir -p ~/.local/share/nautilus/scripts
+cp nautilus/MediaMeshMenu.py ~/.local/share/nautilus/scripts/
+chmod +x ~/.local/share/nautilus/scripts/MediaMeshMenu.py
+```
