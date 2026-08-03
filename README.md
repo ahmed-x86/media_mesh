@@ -70,3 +70,8 @@ mkdir -p ~/.local/share/nemo/actions
 cp nemo/MediaMeshMenu.py ~/.local/share/nemo/actions/
 chmod +x ~/.local/share/nemo/actions/MediaMeshMenu.py
 ```
+### 5. PCManFM (LXDE / LXQt)
+```bash
+mkdir -p ~/.local/share/file-manager/actions
+cp pcmanfm/*.desktop ~/.local/share/file-manager/actions/
+```
