@@ -75,3 +75,7 @@ chmod +x ~/.local/share/nemo/actions/MediaMeshMenu.py
 mkdir -p ~/.local/share/file-manager/actions
 cp pcmanfm/*.desktop ~/.local/share/file-manager/actions/
 ```
+### 6. Thunar (XFCE File Manager)
+```bash
+mkdir -p ~/.config/Thunar/
+```
