@@ -53,3 +53,8 @@ mkdir -p ~/.local/share/caja/scripts
 cp caja/MediaMeshMenu.py ~/.local/share/caja/scripts/
 chmod +x ~/.local/share/caja/scripts/MediaMeshMenu.py
 ```
+### 2. Dolphin (KDE File Manager)
+```bash
+mkdir -p ~/.local/share/kio/servicemenus
+cp dolphin/*.desktop ~/.local/share/kio/servicemenus/
+```
