@@ -43,3 +43,7 @@ sudo cp ./MediaMesh /usr/bin/media_mesh
 
 ## Add to right-click menu
 
+First, navigate to the output directory:
+```bash
+cd output
+```
