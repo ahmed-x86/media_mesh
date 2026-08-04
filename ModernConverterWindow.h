@@ -6,10 +6,10 @@
 #include <QPointF>
 #include <QProgressBar>
 #include <QLabel>
-
-// إضافة مكتبات DBus
 #include <QDBusConnection>
 #include <QDBusMessage>
+
+class RippleButton;
 
 class ModernConverterWindow : public QWidget {
     Q_OBJECT
@@ -25,6 +25,7 @@ private slots:
     void onFfmpegReadyRead();
     void onFfmpegFinished(int exitCode, QProcess::ExitStatus exitStatus);
     void cancelConversion();
+    void togglePauseResume();
 
 private:
     QString m_profile, m_extension, m_inputFile, m_outputFile;
@@ -37,6 +38,9 @@ private:
     
     QProgressBar *m_progressBar;
     QLabel *m_valSpeed, *m_valElapsed, *m_valETA, *m_valFrame;
+
+    RippleButton *m_btnPauseResume;
+    bool m_isPaused = false;
 
     QString getOutputExtension(const QString &profile);
     void applyStyle();
