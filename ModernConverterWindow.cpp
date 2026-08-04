@@ -1,4 +1,6 @@
 #include "ModernConverterWindow.h"
+#include <signal.h>
+#include <sys/types.h>
 #include "Constants.h"
 #include "MochaMsgBox.h"
 #include "RippleButton.h"
@@ -151,11 +153,21 @@ void ModernConverterWindow::setupUI() {
     fileLbl->setAlignment(Qt::AlignCenter);
     cardLayout->addWidget(fileLbl);
 
+    auto *progressLayout = new QHBoxLayout();
+    
     m_progressBar = new QProgressBar();
     m_progressBar->setRange(0, 100);
     m_progressBar->setValue(0);
     m_progressBar->setFormat("0%");
-    cardLayout->addWidget(m_progressBar);
+    
+    m_btnPauseResume = new RippleButton("Pause");
+    m_btnPauseResume->setObjectName("btnCancel"); 
+    m_btnPauseResume->setFixedSize(100, 35);
+    connect(m_btnPauseResume, &QPushButton::clicked, this, &ModernConverterWindow::togglePauseResume);
+    
+    progressLayout->addWidget(m_progressBar);
+    progressLayout->addWidget(m_btnPauseResume);
+    cardLayout->addLayout(progressLayout);
 
     auto *gridLayout = new QGridLayout();
     gridLayout->setSpacing(20);
@@ -209,7 +221,6 @@ void ModernConverterWindow::startFFmpeg() {
         args << "-i" << m_inputFile;
         args << settings.postInputArgs;
     } else {
-        // Fallback in case of missing map definition
         args << "-i" << m_inputFile;
     }
 
@@ -333,4 +344,22 @@ void ModernConverterWindow::sendNotification(const QString &title, const QString
     msg.setArguments(args);
 
     QDBusConnection::sessionBus().asyncCall(msg);
+}
+
+void ModernConverterWindow::togglePauseResume() {
+    if (!m_ffmpegProcess || m_ffmpegProcess->state() != QProcess::Running) return;
+
+    qint64 pid = m_ffmpegProcess->processId();
+    
+    if (pid > 0) {
+        if (!m_isPaused) {
+            kill(pid, SIGSTOP);
+            m_btnPauseResume->setText("Resume");
+            m_isPaused = true;
+        } else {
+            kill(pid, SIGCONT);
+            m_btnPauseResume->setText("Pause");
+            m_isPaused = false;
+        }
+    }
 }
