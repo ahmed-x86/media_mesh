@@ -47,7 +47,7 @@ def _on_action_0(menu_item, files):
 
 
 def _on_action_1(menu_item, files):
-    """Callback: MP4 (CPU)"""
+    """Callback: Convert to MP4"""
     for file_item in files:
         path = _path_from_item(file_item)
         cmd = 'media_mesh -mp4 %file'.replace("%file", shlex.quote(path))
@@ -60,79 +60,11 @@ def _on_action_1(menu_item, files):
                 stderr=subprocess.DEVNULL,
             )
         except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'MP4 (CPU)': {exc}")
+            print(f"[ClickMesh] Error in 'Convert to MP4': {exc}")
 
 
 def _on_action_2(menu_item, files):
-    """Callback: MP4 (NVIDIA NVENC)"""
-    for file_item in files:
-        path = _path_from_item(file_item)
-        cmd = 'media_mesh -mp4_nvenc %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'MP4 (NVIDIA NVENC)': {exc}")
-
-
-def _on_action_3(menu_item, files):
-    """Callback: MP4 (AMD VAAPI)"""
-    for file_item in files:
-        path = _path_from_item(file_item)
-        cmd = 'media_mesh -mp4_amd_vaapi %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'MP4 (AMD VAAPI)': {exc}")
-
-
-def _on_action_4(menu_item, files):
-    """Callback: MP4 (CUDA Decode)"""
-    for file_item in files:
-        path = _path_from_item(file_item)
-        cmd = 'media_mesh -mp4_cuda %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'MP4 (CUDA Decode)': {exc}")
-
-
-def _on_action_5(menu_item, files):
-    """Callback: MP4 (AMD Decode)"""
-    for file_item in files:
-        path = _path_from_item(file_item)
-        cmd = 'media_mesh -mp4_amd %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'MP4 (AMD Decode)': {exc}")
-
-
-def _on_action_6(menu_item, files):
-    """Callback: MKV (CPU)"""
+    """Callback: Convert to MKV"""
     for file_item in files:
         path = _path_from_item(file_item)
         cmd = 'media_mesh -mkv %file'.replace("%file", shlex.quote(path))
@@ -145,79 +77,11 @@ def _on_action_6(menu_item, files):
                 stderr=subprocess.DEVNULL,
             )
         except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'MKV (CPU)': {exc}")
+            print(f"[ClickMesh] Error in 'Convert to MKV': {exc}")
 
 
-def _on_action_7(menu_item, files):
-    """Callback: MKV (NVIDIA NVENC)"""
-    for file_item in files:
-        path = _path_from_item(file_item)
-        cmd = 'media_mesh -mkv_nvenc %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'MKV (NVIDIA NVENC)': {exc}")
-
-
-def _on_action_8(menu_item, files):
-    """Callback: MKV (AMD VAAPI)"""
-    for file_item in files:
-        path = _path_from_item(file_item)
-        cmd = 'media_mesh -mkv_amd_vaapi %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'MKV (AMD VAAPI)': {exc}")
-
-
-def _on_action_9(menu_item, files):
-    """Callback: MKV (CUDA Decode)"""
-    for file_item in files:
-        path = _path_from_item(file_item)
-        cmd = 'media_mesh -mkv_cuda %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'MKV (CUDA Decode)': {exc}")
-
-
-def _on_action_10(menu_item, files):
-    """Callback: MKV (AMD Decode)"""
-    for file_item in files:
-        path = _path_from_item(file_item)
-        cmd = 'media_mesh -mkv_amd %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'MKV (AMD Decode)': {exc}")
-
-
-def _on_action_11(menu_item, files):
-    """Callback: WEBM (CPU VP9)"""
+def _on_action_3(menu_item, files):
+    """Callback: Convert to WEBM"""
     for file_item in files:
         path = _path_from_item(file_item)
         cmd = 'media_mesh -webm %file'.replace("%file", shlex.quote(path))
@@ -230,79 +94,11 @@ def _on_action_11(menu_item, files):
                 stderr=subprocess.DEVNULL,
             )
         except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'WEBM (CPU VP9)': {exc}")
+            print(f"[ClickMesh] Error in 'Convert to WEBM': {exc}")
 
 
-def _on_action_12(menu_item, files):
-    """Callback: WEBM (NVIDIA AV1)"""
-    for file_item in files:
-        path = _path_from_item(file_item)
-        cmd = 'media_mesh -webm_nvenc %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'WEBM (NVIDIA AV1)': {exc}")
-
-
-def _on_action_13(menu_item, files):
-    """Callback: WEBM (AMD VAAPI)"""
-    for file_item in files:
-        path = _path_from_item(file_item)
-        cmd = 'media_mesh -webm_amd_vaapi %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'WEBM (AMD VAAPI)': {exc}")
-
-
-def _on_action_14(menu_item, files):
-    """Callback: WEBM (CUDA Decode)"""
-    for file_item in files:
-        path = _path_from_item(file_item)
-        cmd = 'media_mesh -webm_cuda %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'WEBM (CUDA Decode)': {exc}")
-
-
-def _on_action_15(menu_item, files):
-    """Callback: WEBM (AMD Decode)"""
-    for file_item in files:
-        path = _path_from_item(file_item)
-        cmd = 'media_mesh -webm_amd %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'WEBM (AMD Decode)': {exc}")
-
-
-def _on_action_16(menu_item, files):
-    """Callback: AV1 (SVT-AV1 CPU)"""
+def _on_action_4(menu_item, files):
+    """Callback: Convert to AV1"""
     for file_item in files:
         path = _path_from_item(file_item)
         cmd = 'media_mesh -av1 %file'.replace("%file", shlex.quote(path))
@@ -315,11 +111,11 @@ def _on_action_16(menu_item, files):
                 stderr=subprocess.DEVNULL,
             )
         except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'AV1 (SVT-AV1 CPU)': {exc}")
+            print(f"[ClickMesh] Error in 'Convert to AV1': {exc}")
 
 
-def _on_action_17(menu_item, files):
-    """Callback: DaVinci Resolve (DNxHD CPU)"""
+def _on_action_5(menu_item, files):
+    """Callback: DaVinci Resolve (DNxHD)"""
     for file_item in files:
         path = _path_from_item(file_item)
         cmd = 'media_mesh -davinci %file'.replace("%file", shlex.quote(path))
@@ -332,45 +128,11 @@ def _on_action_17(menu_item, files):
                 stderr=subprocess.DEVNULL,
             )
         except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'DaVinci Resolve (DNxHD CPU)': {exc}")
+            print(f"[ClickMesh] Error in 'DaVinci Resolve (DNxHD)': {exc}")
 
 
-def _on_action_18(menu_item, files):
-    """Callback: DaVinci Resolve (CUDA Full)"""
-    for file_item in files:
-        path = _path_from_item(file_item)
-        cmd = 'media_mesh -davinci_cuda_full %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'DaVinci Resolve (CUDA Full)': {exc}")
-
-
-def _on_action_19(menu_item, files):
-    """Callback: DaVinci Resolve (AMD Full)"""
-    for file_item in files:
-        path = _path_from_item(file_item)
-        cmd = 'media_mesh -davinci_amd_full %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'DaVinci Resolve (AMD Full)': {exc}")
-
-
-def _on_action_20(menu_item, files):
-    """Callback: ProRes (HQ CPU)"""
+def _on_action_6(menu_item, files):
+    """Callback: Apple ProRes (HQ)"""
     for file_item in files:
         path = _path_from_item(file_item)
         cmd = 'media_mesh -prores %file'.replace("%file", shlex.quote(path))
@@ -383,44 +145,10 @@ def _on_action_20(menu_item, files):
                 stderr=subprocess.DEVNULL,
             )
         except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'ProRes (HQ CPU)': {exc}")
+            print(f"[ClickMesh] Error in 'Apple ProRes (HQ)': {exc}")
 
 
-def _on_action_21(menu_item, files):
-    """Callback: ProRes (CUDA Full)"""
-    for file_item in files:
-        path = _path_from_item(file_item)
-        cmd = 'media_mesh -prores_cuda_full %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'ProRes (CUDA Full)': {exc}")
-
-
-def _on_action_22(menu_item, files):
-    """Callback: ProRes (AMD Full)"""
-    for file_item in files:
-        path = _path_from_item(file_item)
-        cmd = 'media_mesh -prores_amd_full %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'ProRes (AMD Full)': {exc}")
-
-
-def _on_action_23(menu_item, files):
+def _on_action_7(menu_item, files):
     """Callback: Extract Audio (MP3)"""
     for file_item in files:
         path = _path_from_item(file_item)
@@ -437,7 +165,7 @@ def _on_action_23(menu_item, files):
             print(f"[ClickMesh] Error in 'Extract Audio (MP3)': {exc}")
 
 
-def _on_action_24(menu_item, files):
+def _on_action_8(menu_item, files):
     """Callback: Extract Audio (AAC)"""
     for file_item in files:
         path = _path_from_item(file_item)
@@ -454,7 +182,7 @@ def _on_action_24(menu_item, files):
             print(f"[ClickMesh] Error in 'Extract Audio (AAC)': {exc}")
 
 
-def _on_action_25(menu_item, files):
+def _on_action_9(menu_item, files):
     """Callback: Extract Audio (WAV)"""
     for file_item in files:
         path = _path_from_item(file_item)
@@ -471,7 +199,7 @@ def _on_action_25(menu_item, files):
             print(f"[ClickMesh] Error in 'Extract Audio (WAV)': {exc}")
 
 
-def _on_action_26(menu_item, files):
+def _on_action_10(menu_item, files):
     """Callback: Convert to GIF"""
     for file_item in files:
         path = _path_from_item(file_item)
@@ -488,7 +216,7 @@ def _on_action_26(menu_item, files):
             print(f"[ClickMesh] Error in 'Convert to GIF': {exc}")
 
 
-def _on_action_27(menu_item, files):
+def _on_action_11(menu_item, files):
     """Callback: Convert to WEBP"""
     for file_item in files:
         path = _path_from_item(file_item)
@@ -505,7 +233,7 @@ def _on_action_27(menu_item, files):
             print(f"[ClickMesh] Error in 'Convert to WEBP': {exc}")
 
 
-def _on_action_28(menu_item, files):
+def _on_action_12(menu_item, files):
     """Callback: Convert to JPG"""
     for file_item in files:
         path = _path_from_item(file_item)
@@ -522,7 +250,7 @@ def _on_action_28(menu_item, files):
             print(f"[ClickMesh] Error in 'Convert to JPG': {exc}")
 
 
-def _on_action_29(menu_item, files):
+def _on_action_13(menu_item, files):
     """Callback: Convert to BMP"""
     for file_item in files:
         path = _path_from_item(file_item)
@@ -539,7 +267,7 @@ def _on_action_29(menu_item, files):
             print(f"[ClickMesh] Error in 'Convert to BMP': {exc}")
 
 
-def _on_action_30(menu_item, files):
+def _on_action_14(menu_item, files):
     """Callback: Convert to ICO"""
     for file_item in files:
         path = _path_from_item(file_item)
@@ -554,40 +282,6 @@ def _on_action_30(menu_item, files):
             )
         except Exception as exc:  # noqa: BLE001
             print(f"[ClickMesh] Error in 'Convert to ICO': {exc}")
-
-
-def _on_action_31(menu_item, files):
-    """Callback: Extract Subtitles (SRT)"""
-    for file_item in files:
-        path = _path_from_item(file_item)
-        cmd = 'media_mesh -srt %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'Extract Subtitles (SRT)': {exc}")
-
-
-def _on_action_32(menu_item, files):
-    """Callback: Extract Subtitles (VTT)"""
-    for file_item in files:
-        path = _path_from_item(file_item)
-        cmd = 'media_mesh -vtt %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'Extract Subtitles (VTT)': {exc}")
 
 
 # ---------------------------------------------------------------------------
@@ -658,8 +352,8 @@ class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
         if show_item_1:
             item_1 = Thunarx.MenuItem(
                 name="MediaMeshMenu::Action1",
-                label="MP4 (CPU)",
-                tip="MP4 (CPU)",
+                label="Convert to MP4",
+                tip="Convert to MP4",
                 icon="video-x-generic",
             )
             item_1.connect("activate", _on_action_1, files)
@@ -680,8 +374,8 @@ class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
         if show_item_2:
             item_2 = Thunarx.MenuItem(
                 name="MediaMeshMenu::Action2",
-                label="MP4 (NVIDIA NVENC)",
-                tip="MP4 (NVIDIA NVENC)",
+                label="Convert to MKV",
+                tip="Convert to MKV",
                 icon="video-x-generic",
             )
             item_2.connect("activate", _on_action_2, files)
@@ -702,8 +396,8 @@ class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
         if show_item_3:
             item_3 = Thunarx.MenuItem(
                 name="MediaMeshMenu::Action3",
-                label="MP4 (AMD VAAPI)",
-                tip="MP4 (AMD VAAPI)",
+                label="Convert to WEBM",
+                tip="Convert to WEBM",
                 icon="video-x-generic",
             )
             item_3.connect("activate", _on_action_3, files)
@@ -724,8 +418,8 @@ class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
         if show_item_4:
             item_4 = Thunarx.MenuItem(
                 name="MediaMeshMenu::Action4",
-                label="MP4 (CUDA Decode)",
-                tip="MP4 (CUDA Decode)",
+                label="Convert to AV1",
+                tip="Convert to AV1",
                 icon="video-x-generic",
             )
             item_4.connect("activate", _on_action_4, files)
@@ -746,8 +440,8 @@ class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
         if show_item_5:
             item_5 = Thunarx.MenuItem(
                 name="MediaMeshMenu::Action5",
-                label="MP4 (AMD Decode)",
-                tip="MP4 (AMD Decode)",
+                label="DaVinci Resolve (DNxHD)",
+                tip="DaVinci Resolve (DNxHD)",
                 icon="video-x-generic",
             )
             item_5.connect("activate", _on_action_5, files)
@@ -768,14 +462,14 @@ class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
         if show_item_6:
             item_6 = Thunarx.MenuItem(
                 name="MediaMeshMenu::Action6",
-                label="MKV (CPU)",
-                tip="MKV (CPU)",
+                label="Apple ProRes (HQ)",
+                tip="Apple ProRes (HQ)",
                 icon="video-x-generic",
             )
             item_6.connect("activate", _on_action_6, files)
             submenu.append_item(item_6)
             items_added += 1
-        item_7_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts')
+        item_7_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts', '.mp3', '.aac', '.wav', '.flac', '.ogg', '.m4a')
         item_7_allow_all = False
         show_item_7 = False
 
@@ -790,14 +484,14 @@ class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
         if show_item_7:
             item_7 = Thunarx.MenuItem(
                 name="MediaMeshMenu::Action7",
-                label="MKV (NVIDIA NVENC)",
-                tip="MKV (NVIDIA NVENC)",
-                icon="video-x-generic",
+                label="Extract Audio (MP3)",
+                tip="Extract Audio (MP3)",
+                icon="audio-x-generic",
             )
             item_7.connect("activate", _on_action_7, files)
             submenu.append_item(item_7)
             items_added += 1
-        item_8_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts')
+        item_8_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts', '.mp3', '.aac', '.wav', '.flac', '.ogg', '.m4a')
         item_8_allow_all = False
         show_item_8 = False
 
@@ -812,14 +506,14 @@ class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
         if show_item_8:
             item_8 = Thunarx.MenuItem(
                 name="MediaMeshMenu::Action8",
-                label="MKV (AMD VAAPI)",
-                tip="MKV (AMD VAAPI)",
-                icon="video-x-generic",
+                label="Extract Audio (AAC)",
+                tip="Extract Audio (AAC)",
+                icon="audio-x-generic",
             )
             item_8.connect("activate", _on_action_8, files)
             submenu.append_item(item_8)
             items_added += 1
-        item_9_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts')
+        item_9_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts', '.mp3', '.aac', '.wav', '.flac', '.ogg', '.m4a')
         item_9_allow_all = False
         show_item_9 = False
 
@@ -834,14 +528,14 @@ class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
         if show_item_9:
             item_9 = Thunarx.MenuItem(
                 name="MediaMeshMenu::Action9",
-                label="MKV (CUDA Decode)",
-                tip="MKV (CUDA Decode)",
-                icon="video-x-generic",
+                label="Extract Audio (WAV)",
+                tip="Extract Audio (WAV)",
+                icon="audio-x-generic",
             )
             item_9.connect("activate", _on_action_9, files)
             submenu.append_item(item_9)
             items_added += 1
-        item_10_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts')
+        item_10_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts', '.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp', '.ico')
         item_10_allow_all = False
         show_item_10 = False
 
@@ -856,14 +550,14 @@ class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
         if show_item_10:
             item_10 = Thunarx.MenuItem(
                 name="MediaMeshMenu::Action10",
-                label="MKV (AMD Decode)",
-                tip="MKV (AMD Decode)",
-                icon="video-x-generic",
+                label="Convert to GIF",
+                tip="Convert to GIF",
+                icon="image-x-generic",
             )
             item_10.connect("activate", _on_action_10, files)
             submenu.append_item(item_10)
             items_added += 1
-        item_11_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts')
+        item_11_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts', '.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp', '.ico')
         item_11_allow_all = False
         show_item_11 = False
 
@@ -878,14 +572,14 @@ class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
         if show_item_11:
             item_11 = Thunarx.MenuItem(
                 name="MediaMeshMenu::Action11",
-                label="WEBM (CPU VP9)",
-                tip="WEBM (CPU VP9)",
-                icon="video-x-generic",
+                label="Convert to WEBP",
+                tip="Convert to WEBP",
+                icon="image-x-generic",
             )
             item_11.connect("activate", _on_action_11, files)
             submenu.append_item(item_11)
             items_added += 1
-        item_12_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts')
+        item_12_exts = ('.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp', '.ico')
         item_12_allow_all = False
         show_item_12 = False
 
@@ -900,14 +594,14 @@ class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
         if show_item_12:
             item_12 = Thunarx.MenuItem(
                 name="MediaMeshMenu::Action12",
-                label="WEBM (NVIDIA AV1)",
-                tip="WEBM (NVIDIA AV1)",
-                icon="video-x-generic",
+                label="Convert to JPG",
+                tip="Convert to JPG",
+                icon="image-x-generic",
             )
             item_12.connect("activate", _on_action_12, files)
             submenu.append_item(item_12)
             items_added += 1
-        item_13_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts')
+        item_13_exts = ('.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp', '.ico')
         item_13_allow_all = False
         show_item_13 = False
 
@@ -922,14 +616,14 @@ class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
         if show_item_13:
             item_13 = Thunarx.MenuItem(
                 name="MediaMeshMenu::Action13",
-                label="WEBM (AMD VAAPI)",
-                tip="WEBM (AMD VAAPI)",
-                icon="video-x-generic",
+                label="Convert to BMP",
+                tip="Convert to BMP",
+                icon="image-x-generic",
             )
             item_13.connect("activate", _on_action_13, files)
             submenu.append_item(item_13)
             items_added += 1
-        item_14_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts')
+        item_14_exts = ('.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp', '.ico')
         item_14_allow_all = False
         show_item_14 = False
 
@@ -944,408 +638,12 @@ class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
         if show_item_14:
             item_14 = Thunarx.MenuItem(
                 name="MediaMeshMenu::Action14",
-                label="WEBM (CUDA Decode)",
-                tip="WEBM (CUDA Decode)",
-                icon="video-x-generic",
-            )
-            item_14.connect("activate", _on_action_14, files)
-            submenu.append_item(item_14)
-            items_added += 1
-        item_15_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts')
-        item_15_allow_all = False
-        show_item_15 = False
-
-        if has_dir and allow_dirs:
-            show_item_15 = True
-        elif has_file:
-            if item_15_allow_all:
-                show_item_15 = True
-            else:
-                show_item_15 = any(any(p.lower().endswith(ext) for ext in item_15_exts) for p in paths if not os.path.isdir(p))
-
-        if show_item_15:
-            item_15 = Thunarx.MenuItem(
-                name="MediaMeshMenu::Action15",
-                label="WEBM (AMD Decode)",
-                tip="WEBM (AMD Decode)",
-                icon="video-x-generic",
-            )
-            item_15.connect("activate", _on_action_15, files)
-            submenu.append_item(item_15)
-            items_added += 1
-        item_16_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts')
-        item_16_allow_all = False
-        show_item_16 = False
-
-        if has_dir and allow_dirs:
-            show_item_16 = True
-        elif has_file:
-            if item_16_allow_all:
-                show_item_16 = True
-            else:
-                show_item_16 = any(any(p.lower().endswith(ext) for ext in item_16_exts) for p in paths if not os.path.isdir(p))
-
-        if show_item_16:
-            item_16 = Thunarx.MenuItem(
-                name="MediaMeshMenu::Action16",
-                label="AV1 (SVT-AV1 CPU)",
-                tip="AV1 (SVT-AV1 CPU)",
-                icon="video-x-generic",
-            )
-            item_16.connect("activate", _on_action_16, files)
-            submenu.append_item(item_16)
-            items_added += 1
-        item_17_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts')
-        item_17_allow_all = False
-        show_item_17 = False
-
-        if has_dir and allow_dirs:
-            show_item_17 = True
-        elif has_file:
-            if item_17_allow_all:
-                show_item_17 = True
-            else:
-                show_item_17 = any(any(p.lower().endswith(ext) for ext in item_17_exts) for p in paths if not os.path.isdir(p))
-
-        if show_item_17:
-            item_17 = Thunarx.MenuItem(
-                name="MediaMeshMenu::Action17",
-                label="DaVinci Resolve (DNxHD CPU)",
-                tip="DaVinci Resolve (DNxHD CPU)",
-                icon="video-x-generic",
-            )
-            item_17.connect("activate", _on_action_17, files)
-            submenu.append_item(item_17)
-            items_added += 1
-        item_18_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts')
-        item_18_allow_all = False
-        show_item_18 = False
-
-        if has_dir and allow_dirs:
-            show_item_18 = True
-        elif has_file:
-            if item_18_allow_all:
-                show_item_18 = True
-            else:
-                show_item_18 = any(any(p.lower().endswith(ext) for ext in item_18_exts) for p in paths if not os.path.isdir(p))
-
-        if show_item_18:
-            item_18 = Thunarx.MenuItem(
-                name="MediaMeshMenu::Action18",
-                label="DaVinci Resolve (CUDA Full)",
-                tip="DaVinci Resolve (CUDA Full)",
-                icon="video-x-generic",
-            )
-            item_18.connect("activate", _on_action_18, files)
-            submenu.append_item(item_18)
-            items_added += 1
-        item_19_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts')
-        item_19_allow_all = False
-        show_item_19 = False
-
-        if has_dir and allow_dirs:
-            show_item_19 = True
-        elif has_file:
-            if item_19_allow_all:
-                show_item_19 = True
-            else:
-                show_item_19 = any(any(p.lower().endswith(ext) for ext in item_19_exts) for p in paths if not os.path.isdir(p))
-
-        if show_item_19:
-            item_19 = Thunarx.MenuItem(
-                name="MediaMeshMenu::Action19",
-                label="DaVinci Resolve (AMD Full)",
-                tip="DaVinci Resolve (AMD Full)",
-                icon="video-x-generic",
-            )
-            item_19.connect("activate", _on_action_19, files)
-            submenu.append_item(item_19)
-            items_added += 1
-        item_20_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts')
-        item_20_allow_all = False
-        show_item_20 = False
-
-        if has_dir and allow_dirs:
-            show_item_20 = True
-        elif has_file:
-            if item_20_allow_all:
-                show_item_20 = True
-            else:
-                show_item_20 = any(any(p.lower().endswith(ext) for ext in item_20_exts) for p in paths if not os.path.isdir(p))
-
-        if show_item_20:
-            item_20 = Thunarx.MenuItem(
-                name="MediaMeshMenu::Action20",
-                label="ProRes (HQ CPU)",
-                tip="ProRes (HQ CPU)",
-                icon="video-x-generic",
-            )
-            item_20.connect("activate", _on_action_20, files)
-            submenu.append_item(item_20)
-            items_added += 1
-        item_21_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts')
-        item_21_allow_all = False
-        show_item_21 = False
-
-        if has_dir and allow_dirs:
-            show_item_21 = True
-        elif has_file:
-            if item_21_allow_all:
-                show_item_21 = True
-            else:
-                show_item_21 = any(any(p.lower().endswith(ext) for ext in item_21_exts) for p in paths if not os.path.isdir(p))
-
-        if show_item_21:
-            item_21 = Thunarx.MenuItem(
-                name="MediaMeshMenu::Action21",
-                label="ProRes (CUDA Full)",
-                tip="ProRes (CUDA Full)",
-                icon="video-x-generic",
-            )
-            item_21.connect("activate", _on_action_21, files)
-            submenu.append_item(item_21)
-            items_added += 1
-        item_22_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts')
-        item_22_allow_all = False
-        show_item_22 = False
-
-        if has_dir and allow_dirs:
-            show_item_22 = True
-        elif has_file:
-            if item_22_allow_all:
-                show_item_22 = True
-            else:
-                show_item_22 = any(any(p.lower().endswith(ext) for ext in item_22_exts) for p in paths if not os.path.isdir(p))
-
-        if show_item_22:
-            item_22 = Thunarx.MenuItem(
-                name="MediaMeshMenu::Action22",
-                label="ProRes (AMD Full)",
-                tip="ProRes (AMD Full)",
-                icon="video-x-generic",
-            )
-            item_22.connect("activate", _on_action_22, files)
-            submenu.append_item(item_22)
-            items_added += 1
-        item_23_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts', '.mp3', '.aac', '.wav', '.flac', '.ogg', '.m4a')
-        item_23_allow_all = False
-        show_item_23 = False
-
-        if has_dir and allow_dirs:
-            show_item_23 = True
-        elif has_file:
-            if item_23_allow_all:
-                show_item_23 = True
-            else:
-                show_item_23 = any(any(p.lower().endswith(ext) for ext in item_23_exts) for p in paths if not os.path.isdir(p))
-
-        if show_item_23:
-            item_23 = Thunarx.MenuItem(
-                name="MediaMeshMenu::Action23",
-                label="Extract Audio (MP3)",
-                tip="Extract Audio (MP3)",
-                icon="audio-x-generic",
-            )
-            item_23.connect("activate", _on_action_23, files)
-            submenu.append_item(item_23)
-            items_added += 1
-        item_24_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts', '.mp3', '.aac', '.wav', '.flac', '.ogg', '.m4a')
-        item_24_allow_all = False
-        show_item_24 = False
-
-        if has_dir and allow_dirs:
-            show_item_24 = True
-        elif has_file:
-            if item_24_allow_all:
-                show_item_24 = True
-            else:
-                show_item_24 = any(any(p.lower().endswith(ext) for ext in item_24_exts) for p in paths if not os.path.isdir(p))
-
-        if show_item_24:
-            item_24 = Thunarx.MenuItem(
-                name="MediaMeshMenu::Action24",
-                label="Extract Audio (AAC)",
-                tip="Extract Audio (AAC)",
-                icon="audio-x-generic",
-            )
-            item_24.connect("activate", _on_action_24, files)
-            submenu.append_item(item_24)
-            items_added += 1
-        item_25_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts', '.mp3', '.aac', '.wav', '.flac', '.ogg', '.m4a')
-        item_25_allow_all = False
-        show_item_25 = False
-
-        if has_dir and allow_dirs:
-            show_item_25 = True
-        elif has_file:
-            if item_25_allow_all:
-                show_item_25 = True
-            else:
-                show_item_25 = any(any(p.lower().endswith(ext) for ext in item_25_exts) for p in paths if not os.path.isdir(p))
-
-        if show_item_25:
-            item_25 = Thunarx.MenuItem(
-                name="MediaMeshMenu::Action25",
-                label="Extract Audio (WAV)",
-                tip="Extract Audio (WAV)",
-                icon="audio-x-generic",
-            )
-            item_25.connect("activate", _on_action_25, files)
-            submenu.append_item(item_25)
-            items_added += 1
-        item_26_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts', '.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp', '.ico')
-        item_26_allow_all = False
-        show_item_26 = False
-
-        if has_dir and allow_dirs:
-            show_item_26 = True
-        elif has_file:
-            if item_26_allow_all:
-                show_item_26 = True
-            else:
-                show_item_26 = any(any(p.lower().endswith(ext) for ext in item_26_exts) for p in paths if not os.path.isdir(p))
-
-        if show_item_26:
-            item_26 = Thunarx.MenuItem(
-                name="MediaMeshMenu::Action26",
-                label="Convert to GIF",
-                tip="Convert to GIF",
-                icon="image-x-generic",
-            )
-            item_26.connect("activate", _on_action_26, files)
-            submenu.append_item(item_26)
-            items_added += 1
-        item_27_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts', '.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp', '.ico')
-        item_27_allow_all = False
-        show_item_27 = False
-
-        if has_dir and allow_dirs:
-            show_item_27 = True
-        elif has_file:
-            if item_27_allow_all:
-                show_item_27 = True
-            else:
-                show_item_27 = any(any(p.lower().endswith(ext) for ext in item_27_exts) for p in paths if not os.path.isdir(p))
-
-        if show_item_27:
-            item_27 = Thunarx.MenuItem(
-                name="MediaMeshMenu::Action27",
-                label="Convert to WEBP",
-                tip="Convert to WEBP",
-                icon="image-x-generic",
-            )
-            item_27.connect("activate", _on_action_27, files)
-            submenu.append_item(item_27)
-            items_added += 1
-        item_28_exts = ('.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp', '.ico')
-        item_28_allow_all = False
-        show_item_28 = False
-
-        if has_dir and allow_dirs:
-            show_item_28 = True
-        elif has_file:
-            if item_28_allow_all:
-                show_item_28 = True
-            else:
-                show_item_28 = any(any(p.lower().endswith(ext) for ext in item_28_exts) for p in paths if not os.path.isdir(p))
-
-        if show_item_28:
-            item_28 = Thunarx.MenuItem(
-                name="MediaMeshMenu::Action28",
-                label="Convert to JPG",
-                tip="Convert to JPG",
-                icon="image-x-generic",
-            )
-            item_28.connect("activate", _on_action_28, files)
-            submenu.append_item(item_28)
-            items_added += 1
-        item_29_exts = ('.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp', '.ico')
-        item_29_allow_all = False
-        show_item_29 = False
-
-        if has_dir and allow_dirs:
-            show_item_29 = True
-        elif has_file:
-            if item_29_allow_all:
-                show_item_29 = True
-            else:
-                show_item_29 = any(any(p.lower().endswith(ext) for ext in item_29_exts) for p in paths if not os.path.isdir(p))
-
-        if show_item_29:
-            item_29 = Thunarx.MenuItem(
-                name="MediaMeshMenu::Action29",
-                label="Convert to BMP",
-                tip="Convert to BMP",
-                icon="image-x-generic",
-            )
-            item_29.connect("activate", _on_action_29, files)
-            submenu.append_item(item_29)
-            items_added += 1
-        item_30_exts = ('.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp', '.ico')
-        item_30_allow_all = False
-        show_item_30 = False
-
-        if has_dir and allow_dirs:
-            show_item_30 = True
-        elif has_file:
-            if item_30_allow_all:
-                show_item_30 = True
-            else:
-                show_item_30 = any(any(p.lower().endswith(ext) for ext in item_30_exts) for p in paths if not os.path.isdir(p))
-
-        if show_item_30:
-            item_30 = Thunarx.MenuItem(
-                name="MediaMeshMenu::Action30",
                 label="Convert to ICO",
                 tip="Convert to ICO",
                 icon="image-x-generic",
             )
-            item_30.connect("activate", _on_action_30, files)
-            submenu.append_item(item_30)
-            items_added += 1
-        item_31_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.ts')
-        item_31_allow_all = False
-        show_item_31 = False
-
-        if has_dir and allow_dirs:
-            show_item_31 = True
-        elif has_file:
-            if item_31_allow_all:
-                show_item_31 = True
-            else:
-                show_item_31 = any(any(p.lower().endswith(ext) for ext in item_31_exts) for p in paths if not os.path.isdir(p))
-
-        if show_item_31:
-            item_31 = Thunarx.MenuItem(
-                name="MediaMeshMenu::Action31",
-                label="Extract Subtitles (SRT)",
-                tip="Extract Subtitles (SRT)",
-                icon="text-x-generic",
-            )
-            item_31.connect("activate", _on_action_31, files)
-            submenu.append_item(item_31)
-            items_added += 1
-        item_32_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.ts')
-        item_32_allow_all = False
-        show_item_32 = False
-
-        if has_dir and allow_dirs:
-            show_item_32 = True
-        elif has_file:
-            if item_32_allow_all:
-                show_item_32 = True
-            else:
-                show_item_32 = any(any(p.lower().endswith(ext) for ext in item_32_exts) for p in paths if not os.path.isdir(p))
-
-        if show_item_32:
-            item_32 = Thunarx.MenuItem(
-                name="MediaMeshMenu::Action32",
-                label="Extract Subtitles (VTT)",
-                tip="Extract Subtitles (VTT)",
-                icon="text-x-generic",
-            )
-            item_32.connect("activate", _on_action_32, files)
-            submenu.append_item(item_32)
+            item_14.connect("activate", _on_action_14, files)
+            submenu.append_item(item_14)
             items_added += 1
         if items_added == 0:
             return []
