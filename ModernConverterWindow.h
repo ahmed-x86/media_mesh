@@ -8,6 +8,7 @@
 #include <QLabel>
 #include <QDBusConnection>
 #include <QDBusMessage>
+#include <QDBusPendingCall>
 
 class RippleButton;
 
@@ -15,7 +16,8 @@ class ModernConverterWindow : public QWidget {
     Q_OBJECT
 
 public:
-    ModernConverterWindow(const QString &profile, const QString &inputFile, QWidget *parent = nullptr);
+    ModernConverterWindow(const QString &profile, const QString &inputFile, const QString &hwDevice, QWidget *parent = nullptr);
+    ~ModernConverterWindow();
 
 protected:
     void paintEvent(QPaintEvent* event) override;
@@ -28,10 +30,10 @@ private slots:
     void togglePauseResume();
 
 private:
-    QString m_profile, m_extension, m_inputFile, m_outputFile;
+    QString m_profile, m_extension, m_inputFile, m_outputFile, m_hwDevice;
     double m_totalDuration = 0.0;
     
-    QProcess *m_ffmpegProcess;
+    QProcess *m_ffmpegProcess = nullptr;
     QElapsedTimer m_elapsedTimer;
     QPointF m_currentGlowPos, m_targetGlowPos;
     QTimer* m_glowTimer;
