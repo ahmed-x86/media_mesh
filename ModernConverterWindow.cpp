@@ -14,56 +14,12 @@
 #include <QGraphicsDropShadowEffect>
 #include <QRegularExpression>
 #include <QApplication>
-#include <QMap>
-#include <QDBusConnection>
-#include <QDBusMessage>
-#include <QDBusPendingCall>
+#include <QTime>
 
-struct FFmpegSettings {
-    QStringList preInputArgs;
-    QStringList postInputArgs;
-};
-
-static const QMap<QString, FFmpegSettings> ffmpegProfiles = {
-    {"mp4",               {{}, {"-c:v", "libx264", "-c:a", "aac", "-movflags", "+faststart"}}},
-    {"mp4_cuda",          {{"-hwaccel", "cuda"}, {"-c:v", "libx264", "-c:a", "aac", "-movflags", "+faststart"}}},
-    {"mp4_nvenc",         {{"-hwaccel", "cuda"}, {"-c:v", "h264_nvenc", "-c:a", "aac", "-movflags", "+faststart"}}},
-    {"mp4_amd",           {{"-hwaccel", "vaapi", "-hwaccel_device", "/dev/dri/renderD128"}, {"-c:v", "libx264", "-c:a", "aac", "-movflags", "+faststart"}}},
-    {"mp4_amd_vaapi",     {{"-hwaccel", "vaapi", "-hwaccel_device", "/dev/dri/renderD128", "-hwaccel_output_format", "vaapi"}, {"-vf", "format=nv12,hwupload", "-c:v", "h264_vaapi", "-c:a", "aac", "-movflags", "+faststart"}}},
-    {"mkv",               {{}, {"-c:v", "libx264", "-c:a", "aac"}}},
-    {"mkv_cuda",          {{"-hwaccel", "cuda"}, {"-c:v", "libx264", "-c:a", "aac"}}},
-    {"mkv_nvenc",         {{"-hwaccel", "cuda"}, {"-c:v", "h264_nvenc", "-c:a", "aac"}}},
-    {"mkv_amd",           {{"-hwaccel", "vaapi", "-hwaccel_device", "/dev/dri/renderD128"}, {"-c:v", "libx264", "-c:a", "aac"}}},
-    {"mkv_amd_vaapi",     {{"-hwaccel", "vaapi", "-hwaccel_device", "/dev/dri/renderD128", "-hwaccel_output_format", "vaapi"}, {"-vf", "format=nv12,hwupload", "-c:v", "h264_vaapi", "-c:a", "aac"}}},
-    {"webm",              {{}, {"-c:v", "libvpx-vp9", "-b:v", "0", "-crf", "30", "-c:a", "libopus"}}},
-    {"webm_cuda",         {{"-hwaccel", "cuda"}, {"-c:v", "libvpx-vp9", "-b:v", "0", "-crf", "30", "-c:a", "libopus"}}},
-    {"webm_nvenc",        {{"-hwaccel", "cuda"}, {"-c:v", "av1_nvenc", "-preset", "slow", "-c:a", "libopus"}}},
-    {"webm_amd",          {{"-hwaccel", "vaapi", "-hwaccel_device", "/dev/dri/renderD128"}, {"-c:v", "libvpx-vp9", "-b:v", "0", "-crf", "30", "-c:a", "libopus"}}},
-    {"webm_amd_vaapi",    {{"-hwaccel", "vaapi", "-hwaccel_device", "/dev/dri/renderD128", "-hwaccel_output_format", "vaapi"}, {"-vf", "format=nv12,hwupload", "-c:v", "vp9_vaapi", "-c:a", "libopus"}}},
-    {"davinci_cuda_full", {{"-hwaccel", "cuda", "-hwaccel_output_format", "cuda"}, {"-vf", "scale_cuda=format=yuv422p", "-c:v", "dnxhd", "-profile:v", "dnxhr_sq", "-c:a", "pcm_s16le"}}},
-    {"davinci_amd_full",  {{"-hwaccel", "vaapi", "-hwaccel_device", "/dev/dri/renderD128", "-hwaccel_output_format", "vaapi"}, {"-vf", "hwdownload,format=nv12,format=yuv422p", "-c:v", "dnxhd", "-profile:v", "dnxhr_sq", "-c:a", "pcm_s16le"}}},
-    {"davinci",           {{}, {"-pix_fmt", "yuv422p", "-c:v", "dnxhd", "-profile:v", "dnxhr_sq", "-c:a", "pcm_s16le"}}},
-    {"prores_cuda_full",  {{"-hwaccel", "cuda", "-hwaccel_output_format", "cuda"}, {"-vf", "hwdownload,format=nv12,format=yuv422p10le", "-c:v", "prores_ks", "-profile:v", "2", "-vendor", "apl0", "-bits_per_mb", "8000", "-c:a", "pcm_s16le"}}},
-    {"prores_amd_full",   {{"-hwaccel", "vaapi", "-hwaccel_device", "/dev/dri/renderD128", "-hwaccel_output_format", "vaapi"}, {"-vf", "hwdownload,format=nv12,format=yuv422p10le", "-c:v", "prores_ks", "-profile:v", "2", "-vendor", "apl0", "-bits_per_mb", "8000", "-c:a", "pcm_s16le"}}},
-    {"prores",            {{}, {"-pix_fmt", "yuv422p10le", "-c:v", "prores_ks", "-profile:v", "2", "-vendor", "apl0", "-bits_per_mb", "8000", "-c:a", "pcm_s16le"}}},
-    {"av1",               {{}, {"-hide_banner", "-loglevel", "error", "-stats", "-c:v", "libsvtav1", "-preset", "6", "-crf", "30", "-c:a", "libopus"}}},
-    {"aac",               {{}, {"-vn", "-c:a", "aac", "-b:a", "192k"}}},
-    {"mp3",               {{}, {"-vn", "-c:a", "libmp3lame", "-b:a", "192k"}}},
-    {"wav",               {{}, {"-vn", "-c:a", "pcm_s16le"}}},
-    {"srt",               {{}, {"-hide_banner", "-loglevel", "error"}}},
-    {"vtt",               {{}, {"-hide_banner", "-loglevel", "error"}}},
-    {"gif",               {{}, {"-vf", "fps=15,scale=720:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse"}}},
-    {"jpg",               {{}, {"-q:v", "2"}}},
-    {"jpeg",              {{}, {"-q:v", "2"}}},
-    {"ico",               {{}, {"-vf", "scale=256:256:flags=lanczos"}}},
-    {"bmp",               {{}, {"-hide_banner", "-loglevel", "error", "-stats", "-pix_fmt", "rgb24"}}},
-    {"webp",              {{}, {"-c:v", "libwebp", "-q:v", "75"}}}
-};
-
-ModernConverterWindow::ModernConverterWindow(const QString &profile, const QString &inputFile, QWidget *parent)
-    : QWidget(parent), m_profile(profile), m_inputFile(inputFile)
+ModernConverterWindow::ModernConverterWindow(const QString &profile, const QString &inputFile, const QString &hwDevice, QWidget *parent)
+    : QWidget(parent), m_profile(profile), m_inputFile(inputFile), m_hwDevice(hwDevice)
 {
-    setWindowTitle("Media Mesh - Processing");
+    setWindowTitle(QString("Media Mesh - %1").arg(m_profile.toUpper()));
     setMinimumSize(600, 400);
     
     m_currentGlowPos = QPointF(width() / 2.0, height() / 2.0);
@@ -85,17 +41,30 @@ ModernConverterWindow::ModernConverterWindow(const QString &profile, const QStri
     m_glowTimer->start();
 
     qApp->installEventFilter(this);
+    
+    // جلب مدة الفيديو لعمل نسبة مئوية دقيقة
     fetchMediaDuration();
 }
 
+ModernConverterWindow::~ModernConverterWindow() {
+    if (m_ffmpegProcess && m_ffmpegProcess->state() == QProcess::Running) {
+        m_ffmpegProcess->kill();
+        m_ffmpegProcess->waitForFinished();
+    }
+}
+
+// حل مشكلة Davinci وغيرها بالامتدادات
 QString ModernConverterWindow::getOutputExtension(const QString &profile) {
-    if (profile.startsWith("mp4")) return "mp4";
-    if (profile.startsWith("mkv")) return "mkv";
-    if (profile.startsWith("webm")) return "webm";
-    if (profile.startsWith("davinci") || profile.startsWith("prores")) return "mov";
-    if (profile.startsWith("av1")) return "mkv";
-    if (profile.startsWith("jpg") || profile.startsWith("jpeg")) return "jpg";
-    return profile; 
+    if (profile.contains("mp4")) return "mp4";
+    if (profile.contains("mkv")) return "mkv";
+    if (profile.contains("webm")) return "webm";
+    if (profile.contains("davinci") || profile.contains("prores")) return "mov";
+    if (profile.contains("av1")) return "mkv";
+    if (profile.contains("jpg") || profile.contains("jpeg")) return "jpg";
+    if (profile.contains("gif")) return "gif";
+    if (profile.contains("webp")) return "webp";
+    if (profile.contains("mp3") || profile.contains("aac") || profile.contains("wav")) return profile;
+    return "mp4"; 
 }
 
 void ModernConverterWindow::applyStyle() {
@@ -142,7 +111,7 @@ void ModernConverterWindow::setupUI() {
     shadow->setOffset(0, 5);
     cardWidget->setGraphicsEffect(shadow);
 
-    auto *titleLbl = new QLabel(QString("Converting Format: %1").arg(m_profile.toUpper()));
+    auto *titleLbl = new QLabel(QString("Encoding: %1 [%2]").arg(m_profile.toUpper(), m_hwDevice.toUpper()));
     titleLbl->setObjectName("titleLabel");
     titleLbl->setAlignment(Qt::AlignCenter);
     cardLayout->addWidget(titleLbl);
@@ -154,7 +123,6 @@ void ModernConverterWindow::setupUI() {
     cardLayout->addWidget(fileLbl);
 
     auto *progressLayout = new QHBoxLayout();
-    
     m_progressBar = new QProgressBar();
     m_progressBar->setRange(0, 100);
     m_progressBar->setValue(0);
@@ -212,46 +180,52 @@ void ModernConverterWindow::startFFmpeg() {
     connect(m_ffmpegProcess, &QProcess::readyReadStandardError, this, &ModernConverterWindow::onFfmpegReadyRead);
     connect(m_ffmpegProcess, QOverload<int, QProcess::ExitStatus>::of(&QProcess::finished), this, &ModernConverterWindow::onFfmpegFinished);
 
-    QStringList args; 
-    args << "-y";
+    QStringList args;
+    args << "-y" << "-hide_banner"; 
 
-    if (ffmpegProfiles.contains(m_profile)) {
-        FFmpegSettings settings = ffmpegProfiles.value(m_profile);
-        args << settings.preInputArgs;
-        args << "-i" << m_inputFile;
-        args << settings.postInputArgs;
-    } else {
-        args << "-i" << m_inputFile;
+    // 1. إعدادات تسريع العتاد للقراءة (Decoding)
+    if (m_hwDevice == "cuda") {
+        args << "-hwaccel" << "cuda";
+    } else if (m_hwDevice == "vaapi") {
+        args << "-hwaccel" << "vaapi" << "-hwaccel_device" << "/dev/dri/renderD128" << "-hwaccel_output_format" << "vaapi";
     }
+
+    args << "-i" << m_inputFile;
+
+    // 2. إعدادات المخرج (Encoding) مبنية على اختيار المستخدم ديناميكياً
+    if (m_profile.contains("mp4")) {
+        if (m_hwDevice == "cuda") args << "-c:v" << "h264_nvenc" << "-preset" << "p4" << "-c:a" << "aac" << "-movflags" << "+faststart";
+        else if (m_hwDevice == "vaapi") args << "-vf" << "format=nv12,hwupload" << "-c:v" << "h264_vaapi" << "-c:a" << "aac" << "-movflags" << "+faststart";
+        else args << "-c:v" << "libx264" << "-c:a" << "aac" << "-movflags" << "+faststart";
+    } 
+    else if (m_profile.contains("mkv")) {
+        if (m_hwDevice == "cuda") args << "-c:v" << "hevc_nvenc" << "-preset" << "p4" << "-c:a" << "aac";
+        else if (m_hwDevice == "vaapi") args << "-vf" << "format=nv12,hwupload" << "-c:v" << "hevc_vaapi" << "-c:a" << "aac";
+        else args << "-c:v" << "libx264" << "-c:a" << "aac";
+    }
+    else if (m_profile.contains("webm")) {
+        args << "-c:v" << "libvpx-vp9" << "-b:v" << "0" << "-crf" << "30" << "-c:a" << "libopus";
+    }
+    else if (m_profile.contains("davinci")) {
+        args << "-pix_fmt" << "yuv422p" << "-c:v" << "dnxhd" << "-profile:v" << "dnxhr_sq" << "-c:a" << "pcm_s16le";
+    }
+    else if (m_profile.contains("prores")) {
+        args << "-profile:v" << "2" << "-vendor" << "apl0" << "-bits_per_mb" << "8000" << "-pix_fmt" << "yuv422p10le" << "-c:v" << "prores_ks" << "-c:a" << "pcm_s16le";
+    }
+    else if (m_profile.contains("av1")) {
+        args << "-c:v" << "libsvtav1" << "-preset" << "6" << "-crf" << "30" << "-c:a" << "libopus";
+    }
+    else if (m_profile.contains("mp3")) { args << "-vn" << "-c:a" << "libmp3lame" << "-b:a" << "192k"; }
+    else if (m_profile.contains("aac")) { args << "-vn" << "-c:a" << "aac" << "-b:a" << "192k"; }
+    else if (m_profile.contains("wav")) { args << "-vn" << "-c:a" << "pcm_s16le"; }
+    else if (m_profile.contains("gif")) { args << "-vf" << "fps=15,scale=720:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse"; }
+    else if (m_profile.contains("webp")) { args << "-c:v" << "libwebp" << "-q:v" << "75"; }
+    else if (m_profile.contains("jpg") || m_profile.contains("bmp")) { args << "-q:v" << "2"; }
 
     args << m_outputFile;
-    
+
     m_elapsedTimer.start();
     m_ffmpegProcess->start("ffmpeg", args);
-}
-
-void ModernConverterWindow::paintEvent(QPaintEvent*) {
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing, true);
-    painter.fillRect(rect(), Mocha::Base);
-
-    QRadialGradient glow(m_currentGlowPos, 300.0);
-    QColor glowColor(Mocha::Accent);
-    glowColor.setAlpha(25);
-    glow.setColorAt(0.0, glowColor);
-    glowColor.setAlpha(0);
-    glow.setColorAt(1.0, glowColor);
-
-    painter.setBrush(QBrush(glow));
-    painter.setPen(Qt::NoPen);
-    painter.drawRect(rect());
-}
-
-bool ModernConverterWindow::eventFilter(QObject* watched, QEvent* event) {
-    if (event->type() == QEvent::MouseMove) {
-        m_targetGlowPos = mapFromGlobal(static_cast<QMouseEvent*>(event)->globalPosition().toPoint());
-    }
-    return QWidget::eventFilter(watched, event);
 }
 
 void ModernConverterWindow::onFfmpegReadyRead() {
@@ -303,11 +277,9 @@ void ModernConverterWindow::onFfmpegFinished(int exitCode, QProcess::ExitStatus 
         m_progressBar->setFormat("100%");
         m_valETA->setText("00:00:00");
         sendNotification("Conversion Complete", "Successfully converted:\n" + m_outputFile, false);
-        
         MochaMsgBox::showMsg(this, "Success", "Conversion completed successfully!\n\n" + m_outputFile, false);
     } else {
         sendNotification("Conversion Failed", "The conversion process was canceled or failed.", true);
-        
         MochaMsgBox::showMsg(this, "Error", "Conversion failed or was canceled.", true);
     }
     close();
@@ -321,7 +293,6 @@ void ModernConverterWindow::cancelConversion() {
 }
 
 void ModernConverterWindow::sendNotification(const QString &title, const QString &message, bool isError) {
-
     QDBusMessage msg = QDBusMessage::createMethodCall(
         "org.freedesktop.Notifications", 
         "/org/freedesktop/Notifications", 
@@ -342,7 +313,6 @@ void ModernConverterWindow::sendNotification(const QString &title, const QString
     args.append(5000);
 
     msg.setArguments(args);
-
     QDBusConnection::sessionBus().asyncCall(msg);
 }
 
@@ -353,13 +323,37 @@ void ModernConverterWindow::togglePauseResume() {
     
     if (pid > 0) {
         if (!m_isPaused) {
-            kill(pid, SIGSTOP);
+            kill(pid, SIGSTOP); // تجميد العملية بالكامل على مستوى النظام
             m_btnPauseResume->setText("Resume");
             m_isPaused = true;
         } else {
-            kill(pid, SIGCONT);
+            kill(pid, SIGCONT); // استكمال العملية
             m_btnPauseResume->setText("Pause");
             m_isPaused = false;
         }
     }
+}
+
+void ModernConverterWindow::paintEvent(QPaintEvent*) {
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing, true);
+    painter.fillRect(rect(), Mocha::Base);
+
+    QRadialGradient glow(m_currentGlowPos, 300.0);
+    QColor glowColor(Mocha::Accent);
+    glowColor.setAlpha(25);
+    glow.setColorAt(0.0, glowColor);
+    glowColor.setAlpha(0);
+    glow.setColorAt(1.0, glowColor);
+
+    painter.setBrush(QBrush(glow));
+    painter.setPen(Qt::NoPen);
+    painter.drawRect(rect());
+}
+
+bool ModernConverterWindow::eventFilter(QObject* watched, QEvent* event) {
+    if (event->type() == QEvent::MouseMove) {
+        m_targetGlowPos = mapFromGlobal(static_cast<QMouseEvent*>(event)->globalPosition().toPoint());
+    }
+    return QWidget::eventFilter(watched, event);
 }
