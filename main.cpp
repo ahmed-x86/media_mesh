@@ -3,6 +3,7 @@
 #include "HomeWindow.h"
 #include "ModernConverterWindow.h"
 #include "MochaMsgBox.h"
+#include "MochaHwDialog.h"
 #include "FileInfoBox.h"
 
 int main(int argc, char *argv[]) {
@@ -34,7 +35,16 @@ int main(int argc, char *argv[]) {
             return 0;
         }
 
-        ModernConverterWindow window(profile, inputFile);
+        // استدعاء نافذة اختيار العتاد قبل التحويل
+        QString selectedHw = MochaHwDialog::getHwDevice();
+        
+        // إذا قام المستخدم بإلغاء النافذة يتم إغلاق البرنامج
+        if (selectedHw.isEmpty()) {
+            return 0;
+        }
+
+        // تمرير العتاد الذي اختاره المستخدم إلى نافذة التحويل
+        ModernConverterWindow window(profile, inputFile, selectedHw);
         window.show();
         return app.exec();
     }
