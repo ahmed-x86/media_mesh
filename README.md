@@ -19,7 +19,7 @@ Ensure you have the following installed on your system:
 - `make` or `ninja`
 - A C++17 compatible compiler (GCC/Clang)
 
-## 🚀 Building from Source
+## 🚀 Building from Source & install in system
 
 It is recommended to build the project in a separate `build` directory:
 
@@ -29,18 +29,8 @@ cd media_mesh
 ```
 and build it
 ```bash
-cmake . && make 
+cmake . && make -j$(nproc) && sudo cp MediaMesh /usr/bin/media_mesh
 ```
-for fast build
-```bash
-cmake . && make -j$(nproc)  
-```
-## install in system
-it is well not work without make `media_mesh` command in system
-```bash
-sudo cp ./MediaMesh /usr/bin/media_mesh
-```
-
 ## Add to right-click menu
 
 First, navigate to the output directory:
