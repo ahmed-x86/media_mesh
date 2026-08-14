@@ -20,8 +20,11 @@
 #include <QApplication>
 #include <QPropertyAnimation>
 #include <QDir>
-#include <QProcess>
 #include <QMessageBox>
+
+extern "C" {
+#include <libavutil/hwcontext.h>
+}
 
 HomeWindow::HomeWindow(QWidget *parent) : QWidget(parent) {
     setWindowTitle("Media Mesh - Menu Extensions");
@@ -66,7 +69,6 @@ bool HomeWindow::eventFilter(QObject* watched, QEvent* event) {
     if (event->type() == QEvent::MouseMove) {
         m_targetGlowPos = mapFromGlobal(static_cast<QMouseEvent*>(event)->globalPosition().toPoint());
     }
-    // Auto-close sidebar if clicked outside of it
     if (event->type() == QEvent::MouseButtonPress && m_isSidebarOpen) {
         QMouseEvent* mouseEvent = static_cast<QMouseEvent*>(event);
         if (mouseEvent->pos().x() > 250) { 
@@ -91,14 +93,12 @@ void HomeWindow::applyStyle() {
     QString qss = QStringLiteral(R"(
         QWidget { font-family: 'Inter', 'Segoe UI', sans-serif; color: %1; }
         
-        /* Sidebar Styles */
         QWidget#sidebar { background-color: rgba(49, 50, 68, 0.95); border-right: 1px solid %5; }
         QPushButton#btnSidebarItem { background: transparent; color: %1; text-align: left; padding: 12px 20px; font-weight: bold; font-size: 15px; }
         QPushButton#btnSidebarItem:hover { background: %5; border-radius: 8px; }
         QPushButton#hamburgerBtn { background: transparent; color: %1; padding: 5px; border-radius: 8px; border: none; font-size: 22px; font-weight: bold; }
         QPushButton#hamburgerBtn:hover { background: %5; }
         
-        /* Cards & Main UI */
         QWidget#cardWidget {
             background-color: rgba(49, 50, 68, 0.7); border-radius: 16px;
             border: 1px solid rgba(205, 214, 244, 0.1);
@@ -106,6 +106,7 @@ void HomeWindow::applyStyle() {
         QLabel#titleLabel { font-size: 28px; font-weight: bold; color: %2; margin-bottom: 10px; }
         QLabel#subTitle { font-size: 15px; color: %3; margin-bottom: 20px; }
         QLabel#homeDesc { font-size: 18px; color: %1; font-weight: bold; }
+        QLabel#fieldLabel { font-size: 14px; color: %1; font-weight: bold; }
         
         QLineEdit {
             background-color: %4; color: %1; border: 1px solid %5;
@@ -150,7 +151,6 @@ void HomeWindow::applyStyle() {
 }
 
 void HomeWindow::setupUI() {
-    // Main Container
     m_mainContent = new QWidget(this);
     auto *rootLayout = new QVBoxLayout(m_mainContent);
     rootLayout->setContentsMargins(20, 15, 20, 15);
@@ -159,12 +159,11 @@ void HomeWindow::setupUI() {
     windowLayout->setContentsMargins(0, 0, 0, 0);
     windowLayout->addWidget(m_mainContent);
 
-    // Top Bar (Hamburger Menu)
     m_topBar = new QWidget(this);
     auto *topRow = new QHBoxLayout(m_topBar);
     topRow->setContentsMargins(0, 0, 0, 0);
 
-    m_hamburgerBtn = new QPushButton("☰");
+    m_hamburgerBtn = new QPushButton("≡");
     m_hamburgerBtn->setObjectName("hamburgerBtn");
     m_hamburgerBtn->setCursor(Qt::PointingHandCursor);
     connect(m_hamburgerBtn, &QPushButton::clicked, this, &HomeWindow::toggleSidebar);
@@ -173,25 +172,18 @@ void HomeWindow::setupUI() {
     topRow->addStretch();
     rootLayout->addWidget(m_topBar);
 
-    // Stacked Widget for Pages
     m_stackedWidget = new QStackedWidget(this);
 
-    // ==========================================
-    // Page 1: Home
-    // ==========================================
     m_homePage = new QWidget(this);
     auto *homeLayout = new QVBoxLayout(m_homePage);
     homeLayout->setAlignment(Qt::AlignCenter);
     
-    auto *homeDesc = new QLabel("This is just a program that adds right-click options\nto Linux file managers for fast media conversion.");
+    auto *homeDesc = new QLabel("Native Media Mesh Converter\nPowered by FFmpeg C API & Qt");
     homeDesc->setObjectName("homeDesc");
     homeDesc->setAlignment(Qt::AlignCenter);
     homeLayout->addWidget(homeDesc);
     m_stackedWidget->addWidget(m_homePage);
 
-    // ==========================================
-    // Page 2: Converter (Old Main UI)
-    // ==========================================
     m_converterPage = new QWidget(this);
     auto *converterMainLayout = new QVBoxLayout(m_converterPage);
     converterMainLayout->setContentsMargins(20, 20, 20, 0);
@@ -211,7 +203,7 @@ void HomeWindow::setupUI() {
     titleLbl->setObjectName("titleLabel");
     titleLbl->setAlignment(Qt::AlignCenter);
     
-    auto *subLbl = new QLabel("Select a file and format to begin conversion");
+    auto *subLbl = new QLabel("Select a file, target format, and hardware accelerator");
     subLbl->setObjectName("subTitle");
     subLbl->setAlignment(Qt::AlignCenter);
 
@@ -227,7 +219,6 @@ void HomeWindow::setupUI() {
     browseBtn->setObjectName("btnBrowse");
     connect(browseBtn, &QPushButton::clicked, this, [this]() {
         QFileDialog dialog(nullptr, "Select Media File");
-        dialog.setNameFilter("Media Files (*.mp4 *.mkv *.webm *.mov *.avi *.mp3 *.aac *.wav *.gif *.jpg *.png *.webp);;All Files (*)");
         if (dialog.exec() == QDialog::Accepted) {
             m_pathInput->setText(dialog.selectedFiles().first());
         }
@@ -248,20 +239,45 @@ void HomeWindow::setupUI() {
     fileLayout->addWidget(infoBtn);
     cardLayout->addLayout(fileLayout);
 
+    auto *optsLayout = new QHBoxLayout();
+    
+    auto *formatLayout = new QVBoxLayout();
+    auto *fmtLbl = new QLabel("Format:");
+    fmtLbl->setObjectName("fieldLabel");
     m_profileCombo = new QComboBox();
-    QStringList profiles = {
-        "mp4", "mp4_nvenc", "mp4_amd_vaapi", "mkv", "webm", "av1", 
-        "davinci_cuda_full", "davinci_amd_full", "prores_cuda_full", 
-        "mp3", "aac", "wav", "gif", "jpg", "webp"
-    };
+    QStringList profiles = {"mp4", "mkv", "webm", "mov", "av1", "mp3", "aac", "wav", "gif", "jpg", "webp"};
     m_profileCombo->addItems(profiles);
     m_profileCombo->setItemDelegate(new QStyledItemDelegate(this));
-    
     if (m_profileCombo->view()->parentWidget()) {
         m_profileCombo->view()->parentWidget()->setWindowFlags(Qt::Popup | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
         m_profileCombo->view()->parentWidget()->setAttribute(Qt::WA_TranslucentBackground);
     }
-    cardLayout->addWidget(m_profileCombo);
+    formatLayout->addWidget(fmtLbl);
+    formatLayout->addWidget(m_profileCombo);
+
+    auto *hwLayout = new QVBoxLayout();
+    auto *hwLbl = new QLabel("Hardware Acceleration:");
+    hwLbl->setObjectName("fieldLabel");
+    m_hwAccelCombo = new QComboBox();
+    
+    QStringList hwOptions;
+    hwOptions << "CPU";
+    enum AVHWDeviceType type = AV_HWDEVICE_TYPE_NONE;
+    while ((type = av_hwdevice_iterate_types(type)) != AV_HWDEVICE_TYPE_NONE) {
+        hwOptions << QString::fromUtf8(av_hwdevice_get_type_name(type));
+    }
+    m_hwAccelCombo->addItems(hwOptions);
+    m_hwAccelCombo->setItemDelegate(new QStyledItemDelegate(this));
+    if (m_hwAccelCombo->view()->parentWidget()) {
+        m_hwAccelCombo->view()->parentWidget()->setWindowFlags(Qt::Popup | Qt::FramelessWindowHint | Qt::NoDropShadowWindowHint);
+        m_hwAccelCombo->view()->parentWidget()->setAttribute(Qt::WA_TranslucentBackground);
+    }
+    hwLayout->addWidget(hwLbl);
+    hwLayout->addWidget(m_hwAccelCombo);
+
+    optsLayout->addLayout(formatLayout);
+    optsLayout->addLayout(hwLayout);
+    cardLayout->addLayout(optsLayout);
 
     auto *startBtn = new RippleButton("Start Conversion");
     startBtn->setObjectName("btnStart");
@@ -271,41 +287,7 @@ void HomeWindow::setupUI() {
             return;
         }
 
-        QString inPath = m_pathInput->text();
-        QString profile = m_profileCombo->currentText();
-        QFileInfo fi(inPath);
-        QString ext = fi.suffix().toLower();
-
-        bool isInputVideo = MediaCategories::VideoExtensions.contains(ext);
-        bool isInputAudio = MediaCategories::AudioExtensions.contains(ext);
-        bool isInputImage = MediaCategories::ImageExtensions.contains(ext);
-
-        bool isOutputVideo = MediaCategories::VideoProfiles.contains(profile);
-        bool isOutputAudio = MediaCategories::AudioProfiles.contains(profile);
-        bool isOutputImage = MediaCategories::ImageProfiles.contains(profile);
-
-        bool valid = false;
-        QString errorMsg;
-
-        if (isInputVideo) {
-            if (isOutputVideo || isOutputAudio) valid = true;
-            else errorMsg = "Videos can only be converted to videos or audios.";
-        } else if (isInputAudio) {
-            if (isOutputAudio) valid = true;
-            else errorMsg = "Audios can only be converted to audios.";
-        } else if (isInputImage) {
-            if (isOutputImage) valid = true;
-            else errorMsg = "Images can only be converted to images.";
-        } else {
-            valid = true; 
-        }
-
-        if (!valid) {
-            MochaMsgBox::showMsg(this, "Conversion Not Allowed", errorMsg, true);
-            return;
-        }
-
-        auto *converter = new ModernConverterWindow(m_profileCombo->currentText(), m_pathInput->text());
+        auto *converter = new ModernConverterWindow(m_profileCombo->currentText(), m_pathInput->text(), m_hwAccelCombo->currentText());
         converter->show();
         this->close();
     });
@@ -315,10 +297,6 @@ void HomeWindow::setupUI() {
     converterMainLayout->addStretch();
     m_stackedWidget->addWidget(m_converterPage);
 
-
-    // ==========================================
-    // Page 3: Install File Manager Extensions
-    // ==========================================
     m_installPage = new QWidget(this);
     auto *installLayout = new QVBoxLayout(m_installPage);
     installLayout->setContentsMargins(20, 20, 20, 0);
@@ -341,7 +319,6 @@ void HomeWindow::setupUI() {
     auto *installGrid = new QGridLayout();
     installGrid->setSpacing(15);
     
-    // Struct for defining file manager configs
     struct FMConfig { QString name; QString outputDir; QString installPath; QString restartCmd; };
     QList<FMConfig> fms = {
         {"Nautilus", "nautilus", QDir::homePath() + "/.local/share/nautilus-python/extensions", "nautilus -q"},
@@ -371,9 +348,6 @@ void HomeWindow::setupUI() {
     installLayout->addStretch();
     m_stackedWidget->addWidget(m_installPage);
 
-    // ==========================================
-    // Wrap up Main Layout
-    // ==========================================
     rootLayout->addWidget(m_stackedWidget);
 
     auto *footerLayout = new QHBoxLayout();
@@ -410,7 +384,7 @@ void HomeWindow::buildSidebar() {
     m_btnNavConvert = new RippleButton("🔄  Convert Media");
     m_btnNavConvert->setObjectName("btnSidebarItem");
 
-    m_btnNavInstall = new RippleButton("🔌  Install Extensions");
+    m_btnNavInstall = new RippleButton("📦  Install Extensions");
     m_btnNavInstall->setObjectName("btnSidebarItem");
     
     layout->addWidget(m_btnNavHome);
@@ -456,14 +430,13 @@ void HomeWindow::toggleSidebar() {
 void HomeWindow::installExtension(const QString &fmName, const QString &destPath, const QString &restartCmd) {
     QString sourceDir = QDir::currentPath() + "/output/" + fmName;
     if (!QDir(sourceDir).exists()) {
-        MochaMsgBox::showMsg(this, "Error", "Output directory for this file manager not found.\nPlease run the mesh script first.", true);
+        MochaMsgBox::showMsg(this, "Error", "Output directory for this file manager not found.", true);
         return;
     }
 
     QDir().mkpath(destPath);
-
     QString cpCommand = QString("cp -r %1/* %2/").arg(sourceDir, destPath);
-    QProcess::execute("bash", {"-c", cpCommand});
+    system(cpCommand.toUtf8().constData());
 
     QMessageBox msgBox(this);
     msgBox.setWindowTitle("Restart Required");
@@ -483,6 +456,6 @@ void HomeWindow::installExtension(const QString &fmName, const QString &destPath
     msgBox.exec();
 
     if (msgBox.clickedButton() == okBtn) {
-        QProcess::startDetached("bash", {"-c", restartCmd});
+        system(restartCmd.toUtf8().constData());
     }
 }
