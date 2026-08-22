@@ -10,22 +10,88 @@
 Type=Service
 X-KDE-ServiceTypes=KonqPopupMenu/Plugin
 MimeType=audio/aac;audio/mp4;audio/mpeg;audio/ogg;audio/x-flac;audio/x-wav;text/vnd.trolltech.linguist;video/mp4;video/quicktime;video/webm;video/x-flv;video/x-matroska;video/x-ms-wmv;video/x-msvideo;
-X-KDE-Submenu=Media Mesh Convert
+X-KDE-Submenu=Media Mesh
 Icon=video-x-generic
 Actions=Action0;Action1;Action2;
 
 [Desktop Action Action0]
-Name=Extract Audio (MP3)
+Name=Extract Audio ▸ Extract MP3
 Icon=audio-x-generic
-Exec=media_mesh -mp3 %F
+Exec=sh -c '_cm=$(mktemp); cat > "$_cm" << '"'"'EOF'"'"'
+if ! command -v media_mesh >/dev/null 2>&1; then
+  zenity --error --text="Required binary 'media_mesh' not found." 2>/dev/null || kdialog --error "Required binary 'media_mesh' not found." 2>/dev/null
+  exit 1
+fi
+for file in "$@"; do
+  export file
+  export dir="$(dirname "$file")"
+  export filename="$(basename "$file")"
+  ext="${filename##*.}"
+  [ "$ext" = "$filename" ] && ext=""
+  export ext
+  export basename="${filename%.*}"
+  export count=$#
+  _iter_script=$(mktemp)
+  cat > "$_iter_script" << 'INNEREOF'
+media_mesh -mp3 "$file"
+INNEREOF
+  bash "$_iter_script"
+  rm -f "$_iter_script"
+done
+EOF
+sh "$_cm" "$@"; rm -f "$_cm"' -- %F
 
 [Desktop Action Action1]
-Name=Extract Audio (AAC)
+Name=Extract Audio ▸ Extract AAC
 Icon=audio-x-generic
-Exec=media_mesh -aac %F
+Exec=sh -c '_cm=$(mktemp); cat > "$_cm" << '"'"'EOF'"'"'
+if ! command -v media_mesh >/dev/null 2>&1; then
+  zenity --error --text="Required binary 'media_mesh' not found." 2>/dev/null || kdialog --error "Required binary 'media_mesh' not found." 2>/dev/null
+  exit 1
+fi
+for file in "$@"; do
+  export file
+  export dir="$(dirname "$file")"
+  export filename="$(basename "$file")"
+  ext="${filename##*.}"
+  [ "$ext" = "$filename" ] && ext=""
+  export ext
+  export basename="${filename%.*}"
+  export count=$#
+  _iter_script=$(mktemp)
+  cat > "$_iter_script" << 'INNEREOF'
+media_mesh -aac "$file"
+INNEREOF
+  bash "$_iter_script"
+  rm -f "$_iter_script"
+done
+EOF
+sh "$_cm" "$@"; rm -f "$_cm"' -- %F
 
 [Desktop Action Action2]
-Name=Extract Audio (WAV)
+Name=Extract Audio ▸ Extract WAV
 Icon=audio-x-generic
-Exec=media_mesh -wav %F
+Exec=sh -c '_cm=$(mktemp); cat > "$_cm" << '"'"'EOF'"'"'
+if ! command -v media_mesh >/dev/null 2>&1; then
+  zenity --error --text="Required binary 'media_mesh' not found." 2>/dev/null || kdialog --error "Required binary 'media_mesh' not found." 2>/dev/null
+  exit 1
+fi
+for file in "$@"; do
+  export file
+  export dir="$(dirname "$file")"
+  export filename="$(basename "$file")"
+  ext="${filename##*.}"
+  [ "$ext" = "$filename" ] && ext=""
+  export ext
+  export basename="${filename%.*}"
+  export count=$#
+  _iter_script=$(mktemp)
+  cat > "$_iter_script" << 'INNEREOF'
+media_mesh -wav "$file"
+INNEREOF
+  bash "$_iter_script"
+  rm -f "$_iter_script"
+done
+EOF
+sh "$_cm" "$@"; rm -f "$_cm"' -- %F
 
