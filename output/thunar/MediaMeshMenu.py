@@ -445,7 +445,7 @@ def _on_action_14(menu_item, files):
 # ---------------------------------------------------------------------------
 
 class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
-    """Injects a 'Media Mesh' submenu into the Thunar right-click menu."""
+    """Injects a '{{MENU_TITLE}}' submenu into the Thunar right-click menu."""
 
     def get_file_items(self, window, files):
         if not files:
@@ -463,13 +463,17 @@ class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
 
         top_item = Thunarx.MenuItem(
             name="MediaMeshMenu::TopMenu",
-            label="Media Mesh",
-            tip="Media Mesh",
+            label=_localize({'en': 'Media Mesh', 'ar': 'ميديا ميش'}),
+            tip=_localize({'en': 'Media Mesh', 'ar': 'ميديا ميش'}),
             icon="video-x-generic",
         )
         submenu = Thunarx.Menu()
         top_item.set_submenu(submenu)
 
+        def _localize(val):
+            if isinstance(val, str): return val
+            lang = os.environ.get('LANG', 'en').split('.')[0].split('_')[0]
+            return val.get(lang, val.get('en', next(iter(val.values())) if val else ''))
         items_added = 0
         # --- Menu Tree Setup ---
         menus = {'': submenu}
@@ -489,8 +493,8 @@ class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
         if show_item_0:
             item_0 = Thunarx.MenuItem(
                 name="MediaMeshMenu::Action0",
-                label="Show Media Info",
-                tip="Show Media Info",
+                label=_localize({'en': 'Show Media Info', 'ar': 'عرض معلومات الوسائط'}),
+                tip=_localize({'en': 'Show Media Info', 'ar': 'عرض معلومات الوسائط'}),
                 icon="dialog-information",
             )
             item_0.connect("activate", _on_action_0, files)
@@ -511,15 +515,15 @@ class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
 
         if show_item_1:
             if 'Convert Video' not in menus:
-                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Convert Video', label='Convert Video', tip='Convert Video')
+                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Convert Video', label=_localize({'en': 'Convert Video', 'ar': 'تحويل الفيديو'}), tip=_localize({'en': 'Convert Video', 'ar': 'تحويل الفيديو'}))
                 group_menu = Thunarx.Menu()
                 group_item.set_submenu(group_menu)
                 menus[''].append_item(group_item)
                 menus['Convert Video'] = group_menu
             item_1 = Thunarx.MenuItem(
                 name="MediaMeshMenu::Action1",
-                label="To MP4",
-                tip="To MP4",
+                label=_localize({'en': 'To MP4', 'ar': 'إلى MP4'}),
+                tip=_localize({'en': 'To MP4', 'ar': 'إلى MP4'}),
                 icon="video-x-generic",
             )
             item_1.connect("activate", _on_action_1, files)
@@ -540,15 +544,15 @@ class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
 
         if show_item_2:
             if 'Convert Video' not in menus:
-                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Convert Video', label='Convert Video', tip='Convert Video')
+                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Convert Video', label=_localize({'en': 'Convert Video', 'ar': 'تحويل الفيديو'}), tip=_localize({'en': 'Convert Video', 'ar': 'تحويل الفيديو'}))
                 group_menu = Thunarx.Menu()
                 group_item.set_submenu(group_menu)
                 menus[''].append_item(group_item)
                 menus['Convert Video'] = group_menu
             item_2 = Thunarx.MenuItem(
                 name="MediaMeshMenu::Action2",
-                label="To MKV",
-                tip="To MKV",
+                label=_localize({'en': 'To MKV', 'ar': 'إلى MKV'}),
+                tip=_localize({'en': 'To MKV', 'ar': 'إلى MKV'}),
                 icon="video-x-generic",
             )
             item_2.connect("activate", _on_action_2, files)
@@ -569,15 +573,15 @@ class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
 
         if show_item_3:
             if 'Convert Video' not in menus:
-                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Convert Video', label='Convert Video', tip='Convert Video')
+                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Convert Video', label=_localize({'en': 'Convert Video', 'ar': 'تحويل الفيديو'}), tip=_localize({'en': 'Convert Video', 'ar': 'تحويل الفيديو'}))
                 group_menu = Thunarx.Menu()
                 group_item.set_submenu(group_menu)
                 menus[''].append_item(group_item)
                 menus['Convert Video'] = group_menu
             item_3 = Thunarx.MenuItem(
                 name="MediaMeshMenu::Action3",
-                label="To WEBM",
-                tip="To WEBM",
+                label=_localize({'en': 'To WEBM', 'ar': 'إلى WEBM'}),
+                tip=_localize({'en': 'To WEBM', 'ar': 'إلى WEBM'}),
                 icon="video-x-generic",
             )
             item_3.connect("activate", _on_action_3, files)
@@ -598,15 +602,15 @@ class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
 
         if show_item_4:
             if 'Convert Video' not in menus:
-                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Convert Video', label='Convert Video', tip='Convert Video')
+                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Convert Video', label=_localize({'en': 'Convert Video', 'ar': 'تحويل الفيديو'}), tip=_localize({'en': 'Convert Video', 'ar': 'تحويل الفيديو'}))
                 group_menu = Thunarx.Menu()
                 group_item.set_submenu(group_menu)
                 menus[''].append_item(group_item)
                 menus['Convert Video'] = group_menu
             item_4 = Thunarx.MenuItem(
                 name="MediaMeshMenu::Action4",
-                label="To AV1",
-                tip="To AV1",
+                label=_localize({'en': 'To AV1', 'ar': 'إلى AV1'}),
+                tip=_localize({'en': 'To AV1', 'ar': 'إلى AV1'}),
                 icon="video-x-generic",
             )
             item_4.connect("activate", _on_action_4, files)
@@ -627,21 +631,21 @@ class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
 
         if show_item_5:
             if 'Convert Video' not in menus:
-                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Convert Video', label='Convert Video', tip='Convert Video')
+                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Convert Video', label=_localize({'en': 'Convert Video', 'ar': 'تحويل الفيديو'}), tip=_localize({'en': 'Convert Video', 'ar': 'تحويل الفيديو'}))
                 group_menu = Thunarx.Menu()
                 group_item.set_submenu(group_menu)
                 menus[''].append_item(group_item)
                 menus['Convert Video'] = group_menu
             if 'Convert Video/Professional' not in menus:
-                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Convert Video/Professional', label='Professional', tip='Professional')
+                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Convert Video/Professional', label=_localize({'en': 'Professional', 'ar': 'احترافي'}), tip=_localize({'en': 'Professional', 'ar': 'احترافي'}))
                 group_menu = Thunarx.Menu()
                 group_item.set_submenu(group_menu)
                 menus['Convert Video'].append_item(group_item)
                 menus['Convert Video/Professional'] = group_menu
             item_5 = Thunarx.MenuItem(
                 name="MediaMeshMenu::Action5",
-                label="DaVinci Resolve (DNxHD)",
-                tip="DaVinci Resolve (DNxHD)",
+                label=_localize({'en': 'DaVinci Resolve (DNxHD)', 'ar': 'دافينشي ريزولف (DNxHD)'}),
+                tip=_localize({'en': 'DaVinci Resolve (DNxHD)', 'ar': 'دافينشي ريزولف (DNxHD)'}),
                 icon="video-x-generic",
             )
             item_5.connect("activate", _on_action_5, files)
@@ -662,21 +666,21 @@ class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
 
         if show_item_6:
             if 'Convert Video' not in menus:
-                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Convert Video', label='Convert Video', tip='Convert Video')
+                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Convert Video', label=_localize({'en': 'Convert Video', 'ar': 'تحويل الفيديو'}), tip=_localize({'en': 'Convert Video', 'ar': 'تحويل الفيديو'}))
                 group_menu = Thunarx.Menu()
                 group_item.set_submenu(group_menu)
                 menus[''].append_item(group_item)
                 menus['Convert Video'] = group_menu
             if 'Convert Video/Professional' not in menus:
-                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Convert Video/Professional', label='Professional', tip='Professional')
+                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Convert Video/Professional', label=_localize({'en': 'Professional', 'ar': 'احترافي'}), tip=_localize({'en': 'Professional', 'ar': 'احترافي'}))
                 group_menu = Thunarx.Menu()
                 group_item.set_submenu(group_menu)
                 menus['Convert Video'].append_item(group_item)
                 menus['Convert Video/Professional'] = group_menu
             item_6 = Thunarx.MenuItem(
                 name="MediaMeshMenu::Action6",
-                label="Apple ProRes (HQ)",
-                tip="Apple ProRes (HQ)",
+                label=_localize({'en': 'Apple ProRes (HQ)', 'ar': 'أبل برو ريز (HQ)'}),
+                tip=_localize({'en': 'Apple ProRes (HQ)', 'ar': 'أبل برو ريز (HQ)'}),
                 icon="video-x-generic",
             )
             item_6.connect("activate", _on_action_6, files)
@@ -697,15 +701,15 @@ class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
 
         if show_item_7:
             if 'Extract Audio' not in menus:
-                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Extract Audio', label='Extract Audio', tip='Extract Audio')
+                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Extract Audio', label=_localize({'en': 'Extract Audio', 'ar': 'استخراج الصوت'}), tip=_localize({'en': 'Extract Audio', 'ar': 'استخراج الصوت'}))
                 group_menu = Thunarx.Menu()
                 group_item.set_submenu(group_menu)
                 menus[''].append_item(group_item)
                 menus['Extract Audio'] = group_menu
             item_7 = Thunarx.MenuItem(
                 name="MediaMeshMenu::Action7",
-                label="Extract MP3",
-                tip="Extract MP3",
+                label=_localize({'en': 'Extract MP3', 'ar': 'استخراج MP3'}),
+                tip=_localize({'en': 'Extract MP3', 'ar': 'استخراج MP3'}),
                 icon="audio-x-generic",
             )
             item_7.connect("activate", _on_action_7, files)
@@ -726,15 +730,15 @@ class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
 
         if show_item_8:
             if 'Extract Audio' not in menus:
-                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Extract Audio', label='Extract Audio', tip='Extract Audio')
+                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Extract Audio', label=_localize({'en': 'Extract Audio', 'ar': 'استخراج الصوت'}), tip=_localize({'en': 'Extract Audio', 'ar': 'استخراج الصوت'}))
                 group_menu = Thunarx.Menu()
                 group_item.set_submenu(group_menu)
                 menus[''].append_item(group_item)
                 menus['Extract Audio'] = group_menu
             item_8 = Thunarx.MenuItem(
                 name="MediaMeshMenu::Action8",
-                label="Extract AAC",
-                tip="Extract AAC",
+                label=_localize({'en': 'Extract AAC', 'ar': 'استخراج AAC'}),
+                tip=_localize({'en': 'Extract AAC', 'ar': 'استخراج AAC'}),
                 icon="audio-x-generic",
             )
             item_8.connect("activate", _on_action_8, files)
@@ -755,15 +759,15 @@ class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
 
         if show_item_9:
             if 'Extract Audio' not in menus:
-                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Extract Audio', label='Extract Audio', tip='Extract Audio')
+                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Extract Audio', label=_localize({'en': 'Extract Audio', 'ar': 'استخراج الصوت'}), tip=_localize({'en': 'Extract Audio', 'ar': 'استخراج الصوت'}))
                 group_menu = Thunarx.Menu()
                 group_item.set_submenu(group_menu)
                 menus[''].append_item(group_item)
                 menus['Extract Audio'] = group_menu
             item_9 = Thunarx.MenuItem(
                 name="MediaMeshMenu::Action9",
-                label="Extract WAV",
-                tip="Extract WAV",
+                label=_localize({'en': 'Extract WAV', 'ar': 'استخراج WAV'}),
+                tip=_localize({'en': 'Extract WAV', 'ar': 'استخراج WAV'}),
                 icon="audio-x-generic",
             )
             item_9.connect("activate", _on_action_9, files)
@@ -784,15 +788,15 @@ class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
 
         if show_item_10:
             if 'Images & Animations' not in menus:
-                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Images & Animations', label='Images & Animations', tip='Images & Animations')
+                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Images & Animations', label=_localize({'en': 'Images & Animations', 'ar': 'صور ورسوم متحركة'}), tip=_localize({'en': 'Images & Animations', 'ar': 'صور ورسوم متحركة'}))
                 group_menu = Thunarx.Menu()
                 group_item.set_submenu(group_menu)
                 menus[''].append_item(group_item)
                 menus['Images & Animations'] = group_menu
             item_10 = Thunarx.MenuItem(
                 name="MediaMeshMenu::Action10",
-                label="To GIF",
-                tip="To GIF",
+                label=_localize({'en': 'To GIF', 'ar': 'إلى GIF'}),
+                tip=_localize({'en': 'To GIF', 'ar': 'إلى GIF'}),
                 icon="image-x-generic",
             )
             item_10.connect("activate", _on_action_10, files)
@@ -813,15 +817,15 @@ class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
 
         if show_item_11:
             if 'Images & Animations' not in menus:
-                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Images & Animations', label='Images & Animations', tip='Images & Animations')
+                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Images & Animations', label=_localize({'en': 'Images & Animations', 'ar': 'صور ورسوم متحركة'}), tip=_localize({'en': 'Images & Animations', 'ar': 'صور ورسوم متحركة'}))
                 group_menu = Thunarx.Menu()
                 group_item.set_submenu(group_menu)
                 menus[''].append_item(group_item)
                 menus['Images & Animations'] = group_menu
             item_11 = Thunarx.MenuItem(
                 name="MediaMeshMenu::Action11",
-                label="To WEBP",
-                tip="To WEBP",
+                label=_localize({'en': 'To WEBP', 'ar': 'إلى WEBP'}),
+                tip=_localize({'en': 'To WEBP', 'ar': 'إلى WEBP'}),
                 icon="image-x-generic",
             )
             item_11.connect("activate", _on_action_11, files)
@@ -842,15 +846,15 @@ class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
 
         if show_item_12:
             if 'Images & Animations' not in menus:
-                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Images & Animations', label='Images & Animations', tip='Images & Animations')
+                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Images & Animations', label=_localize({'en': 'Images & Animations', 'ar': 'صور ورسوم متحركة'}), tip=_localize({'en': 'Images & Animations', 'ar': 'صور ورسوم متحركة'}))
                 group_menu = Thunarx.Menu()
                 group_item.set_submenu(group_menu)
                 menus[''].append_item(group_item)
                 menus['Images & Animations'] = group_menu
             item_12 = Thunarx.MenuItem(
                 name="MediaMeshMenu::Action12",
-                label="To JPG",
-                tip="To JPG",
+                label=_localize({'en': 'To JPG', 'ar': 'إلى JPG'}),
+                tip=_localize({'en': 'To JPG', 'ar': 'إلى JPG'}),
                 icon="image-x-generic",
             )
             item_12.connect("activate", _on_action_12, files)
@@ -871,15 +875,15 @@ class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
 
         if show_item_13:
             if 'Images & Animations' not in menus:
-                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Images & Animations', label='Images & Animations', tip='Images & Animations')
+                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Images & Animations', label=_localize({'en': 'Images & Animations', 'ar': 'صور ورسوم متحركة'}), tip=_localize({'en': 'Images & Animations', 'ar': 'صور ورسوم متحركة'}))
                 group_menu = Thunarx.Menu()
                 group_item.set_submenu(group_menu)
                 menus[''].append_item(group_item)
                 menus['Images & Animations'] = group_menu
             item_13 = Thunarx.MenuItem(
                 name="MediaMeshMenu::Action13",
-                label="To BMP",
-                tip="To BMP",
+                label=_localize({'en': 'To BMP', 'ar': 'إلى BMP'}),
+                tip=_localize({'en': 'To BMP', 'ar': 'إلى BMP'}),
                 icon="image-x-generic",
             )
             item_13.connect("activate", _on_action_13, files)
@@ -900,15 +904,15 @@ class MediameshmenuExtension(GObject.GObject, Thunarx.MenuProvider):
 
         if show_item_14:
             if 'Images & Animations' not in menus:
-                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Images & Animations', label='Images & Animations', tip='Images & Animations')
+                group_item = Thunarx.MenuItem(name='MediaMeshMenu::Images & Animations', label=_localize({'en': 'Images & Animations', 'ar': 'صور ورسوم متحركة'}), tip=_localize({'en': 'Images & Animations', 'ar': 'صور ورسوم متحركة'}))
                 group_menu = Thunarx.Menu()
                 group_item.set_submenu(group_menu)
                 menus[''].append_item(group_item)
                 menus['Images & Animations'] = group_menu
             item_14 = Thunarx.MenuItem(
                 name="MediaMeshMenu::Action14",
-                label="To ICO",
-                tip="To ICO",
+                label=_localize({'en': 'To ICO', 'ar': 'إلى ICO'}),
+                tip=_localize({'en': 'To ICO', 'ar': 'إلى ICO'}),
                 icon="image-x-generic",
             )
             item_14.connect("activate", _on_action_14, files)
