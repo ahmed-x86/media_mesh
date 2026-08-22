@@ -10,22 +10,88 @@
 Type=Service
 X-KDE-ServiceTypes=KonqPopupMenu/Plugin
 MimeType=image/bmp;image/gif;image/jpeg;image/png;image/vnd.microsoft.icon;image/webp;
-X-KDE-Submenu=Media Mesh Convert
+X-KDE-Submenu=Media Mesh
 Icon=video-x-generic
 Actions=Action0;Action1;Action2;
 
 [Desktop Action Action0]
-Name=Convert to JPG
+Name=Images & Animations ▸ To JPG
 Icon=image-x-generic
-Exec=media_mesh -jpg %F
+Exec=sh -c '_cm=$(mktemp); cat > "$_cm" << '"'"'EOF'"'"'
+if ! command -v media_mesh >/dev/null 2>&1; then
+  zenity --error --text="Required binary 'media_mesh' not found." 2>/dev/null || kdialog --error "Required binary 'media_mesh' not found." 2>/dev/null
+  exit 1
+fi
+for file in "$@"; do
+  export file
+  export dir="$(dirname "$file")"
+  export filename="$(basename "$file")"
+  ext="${filename##*.}"
+  [ "$ext" = "$filename" ] && ext=""
+  export ext
+  export basename="${filename%.*}"
+  export count=$#
+  _iter_script=$(mktemp)
+  cat > "$_iter_script" << 'INNEREOF'
+media_mesh -jpg "$file"
+INNEREOF
+  bash "$_iter_script"
+  rm -f "$_iter_script"
+done
+EOF
+sh "$_cm" "$@"; rm -f "$_cm"' -- %F
 
 [Desktop Action Action1]
-Name=Convert to BMP
+Name=Images & Animations ▸ To BMP
 Icon=image-x-generic
-Exec=media_mesh -bmp %F
+Exec=sh -c '_cm=$(mktemp); cat > "$_cm" << '"'"'EOF'"'"'
+if ! command -v media_mesh >/dev/null 2>&1; then
+  zenity --error --text="Required binary 'media_mesh' not found." 2>/dev/null || kdialog --error "Required binary 'media_mesh' not found." 2>/dev/null
+  exit 1
+fi
+for file in "$@"; do
+  export file
+  export dir="$(dirname "$file")"
+  export filename="$(basename "$file")"
+  ext="${filename##*.}"
+  [ "$ext" = "$filename" ] && ext=""
+  export ext
+  export basename="${filename%.*}"
+  export count=$#
+  _iter_script=$(mktemp)
+  cat > "$_iter_script" << 'INNEREOF'
+media_mesh -bmp "$file"
+INNEREOF
+  bash "$_iter_script"
+  rm -f "$_iter_script"
+done
+EOF
+sh "$_cm" "$@"; rm -f "$_cm"' -- %F
 
 [Desktop Action Action2]
-Name=Convert to ICO
+Name=Images & Animations ▸ To ICO
 Icon=image-x-generic
-Exec=media_mesh -ico %F
+Exec=sh -c '_cm=$(mktemp); cat > "$_cm" << '"'"'EOF'"'"'
+if ! command -v media_mesh >/dev/null 2>&1; then
+  zenity --error --text="Required binary 'media_mesh' not found." 2>/dev/null || kdialog --error "Required binary 'media_mesh' not found." 2>/dev/null
+  exit 1
+fi
+for file in "$@"; do
+  export file
+  export dir="$(dirname "$file")"
+  export filename="$(basename "$file")"
+  ext="${filename##*.}"
+  [ "$ext" = "$filename" ] && ext=""
+  export ext
+  export basename="${filename%.*}"
+  export count=$#
+  _iter_script=$(mktemp)
+  cat > "$_iter_script" << 'INNEREOF'
+media_mesh -ico "$file"
+INNEREOF
+  bash "$_iter_script"
+  rm -f "$_iter_script"
+done
+EOF
+sh "$_cm" "$@"; rm -f "$_cm"' -- %F
 
