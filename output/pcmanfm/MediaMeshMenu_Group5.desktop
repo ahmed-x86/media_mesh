@@ -9,14 +9,16 @@
 [Desktop Entry]
 Type=Action
 Name=Media Mesh
+Name[ar]=ميديا ميش
 Icon=video-x-generic
 Profiles=default;
-MimeTypes=image/bmp;image/gif;image/jpeg;image/png;image/vnd.microsoft.icon;image/webp;
+MimeTypes=audio/aac;audio/mp4;audio/mpeg;audio/ogg;audio/x-flac;audio/x-wav;image/bmp;image/gif;image/jpeg;image/png;image/vnd.microsoft.icon;image/webp;text/vnd.trolltech.linguist;video/mp4;video/quicktime;video/webm;video/x-flv;video/x-matroska;video/x-ms-wmv;video/x-msvideo;
 TargetLocation=true
 Actions=Action0;Action1;Action2;
 
 [Desktop Action Action0]
 Name=Images & Animations ▸ To JPG
+Name[ar]=صور ورسوم متحركة ▸ إلى JPG
 Icon=image-x-generic
 Exec=sh -c '_cm=$(mktemp); cat > "$_cm" << '"'"'EOF'"'"'
 if ! command -v media_mesh >/dev/null 2>&1; then
@@ -44,6 +46,7 @@ sh "$_cm" "$@"; rm -f "$_cm"' -- %F
 
 [Desktop Action Action1]
 Name=Images & Animations ▸ To BMP
+Name[ar]=صور ورسوم متحركة ▸ إلى BMP
 Icon=image-x-generic
 Exec=sh -c '_cm=$(mktemp); cat > "$_cm" << '"'"'EOF'"'"'
 if ! command -v media_mesh >/dev/null 2>&1; then
@@ -71,6 +74,7 @@ sh "$_cm" "$@"; rm -f "$_cm"' -- %F
 
 [Desktop Action Action2]
 Name=Images & Animations ▸ To ICO
+Name[ar]=صور ورسوم متحركة ▸ إلى ICO
 Icon=image-x-generic
 Exec=sh -c '_cm=$(mktemp); cat > "$_cm" << '"'"'EOF'"'"'
 if ! command -v media_mesh >/dev/null 2>&1; then
@@ -95,4 +99,3 @@ INNEREOF
 done
 EOF
 sh "$_cm" "$@"; rm -f "$_cm"' -- %F
-
