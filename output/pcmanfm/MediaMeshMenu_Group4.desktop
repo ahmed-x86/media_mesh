@@ -8,7 +8,7 @@
 
 [Desktop Entry]
 Type=Action
-Name=Media Mesh Convert
+Name=Media Mesh
 Icon=video-x-generic
 Profiles=default;
 MimeTypes=image/bmp;image/gif;image/jpeg;image/png;image/vnd.microsoft.icon;image/webp;text/vnd.trolltech.linguist;video/mp4;video/quicktime;video/webm;video/x-flv;video/x-matroska;video/x-ms-wmv;video/x-msvideo;
@@ -16,12 +16,56 @@ TargetLocation=true
 Actions=Action0;Action1;
 
 [Desktop Action Action0]
-Name=Convert to GIF
+Name=Images & Animations ▸ To GIF
 Icon=image-x-generic
-Exec=media_mesh -gif %F
+Exec=sh -c '_cm=$(mktemp); cat > "$_cm" << '"'"'EOF'"'"'
+if ! command -v media_mesh >/dev/null 2>&1; then
+  zenity --error --text="Required binary 'media_mesh' not found." 2>/dev/null || kdialog --error "Required binary 'media_mesh' not found." 2>/dev/null
+  exit 1
+fi
+for file in "$@"; do
+  export file
+  export dir="$(dirname "$file")"
+  export filename="$(basename "$file")"
+  ext="${filename##*.}"
+  [ "$ext" = "$filename" ] && ext=""
+  export ext
+  export basename="${filename%.*}"
+  export count=$#
+  _iter_script=$(mktemp)
+  cat > "$_iter_script" << 'INNEREOF'
+media_mesh -gif "$file"
+INNEREOF
+  bash "$_iter_script"
+  rm -f "$_iter_script"
+done
+EOF
+sh "$_cm" "$@"; rm -f "$_cm"' -- %F
 
 [Desktop Action Action1]
-Name=Convert to WEBP
+Name=Images & Animations ▸ To WEBP
 Icon=image-x-generic
-Exec=media_mesh -webp %F
+Exec=sh -c '_cm=$(mktemp); cat > "$_cm" << '"'"'EOF'"'"'
+if ! command -v media_mesh >/dev/null 2>&1; then
+  zenity --error --text="Required binary 'media_mesh' not found." 2>/dev/null || kdialog --error "Required binary 'media_mesh' not found." 2>/dev/null
+  exit 1
+fi
+for file in "$@"; do
+  export file
+  export dir="$(dirname "$file")"
+  export filename="$(basename "$file")"
+  ext="${filename##*.}"
+  [ "$ext" = "$filename" ] && ext=""
+  export ext
+  export basename="${filename%.*}"
+  export count=$#
+  _iter_script=$(mktemp)
+  cat > "$_iter_script" << 'INNEREOF'
+media_mesh -webp "$file"
+INNEREOF
+  bash "$_iter_script"
+  rm -f "$_iter_script"
+done
+EOF
+sh "$_cm" "$@"; rm -f "$_cm"' -- %F
 
