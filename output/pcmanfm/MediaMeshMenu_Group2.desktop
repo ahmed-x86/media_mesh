@@ -8,7 +8,7 @@
 
 [Desktop Entry]
 Type=Action
-Name=Media Mesh Convert
+Name=Media Mesh
 Icon=video-x-generic
 Profiles=default;
 MimeTypes=text/vnd.trolltech.linguist;video/mp4;video/quicktime;video/webm;video/x-flv;video/x-matroska;video/x-ms-wmv;video/x-msvideo;
@@ -16,32 +16,164 @@ TargetLocation=true
 Actions=Action0;Action1;Action2;Action3;Action4;Action5;
 
 [Desktop Action Action0]
-Name=Convert to MP4
+Name=Convert Video ▸ To MP4
 Icon=video-x-generic
-Exec=media_mesh -mp4 %F
+Exec=sh -c '_cm=$(mktemp); cat > "$_cm" << '"'"'EOF'"'"'
+if ! command -v media_mesh >/dev/null 2>&1; then
+  zenity --error --text="Required binary 'media_mesh' not found." 2>/dev/null || kdialog --error "Required binary 'media_mesh' not found." 2>/dev/null
+  exit 1
+fi
+for file in "$@"; do
+  export file
+  export dir="$(dirname "$file")"
+  export filename="$(basename "$file")"
+  ext="${filename##*.}"
+  [ "$ext" = "$filename" ] && ext=""
+  export ext
+  export basename="${filename%.*}"
+  export count=$#
+  _iter_script=$(mktemp)
+  cat > "$_iter_script" << 'INNEREOF'
+media_mesh -mp4 "$file"
+INNEREOF
+  bash "$_iter_script"
+  rm -f "$_iter_script"
+done
+EOF
+sh "$_cm" "$@"; rm -f "$_cm"' -- %F
 
 [Desktop Action Action1]
-Name=Convert to MKV
+Name=Convert Video ▸ To MKV
 Icon=video-x-generic
-Exec=media_mesh -mkv %F
+Exec=sh -c '_cm=$(mktemp); cat > "$_cm" << '"'"'EOF'"'"'
+if ! command -v media_mesh >/dev/null 2>&1; then
+  zenity --error --text="Required binary 'media_mesh' not found." 2>/dev/null || kdialog --error "Required binary 'media_mesh' not found." 2>/dev/null
+  exit 1
+fi
+for file in "$@"; do
+  export file
+  export dir="$(dirname "$file")"
+  export filename="$(basename "$file")"
+  ext="${filename##*.}"
+  [ "$ext" = "$filename" ] && ext=""
+  export ext
+  export basename="${filename%.*}"
+  export count=$#
+  _iter_script=$(mktemp)
+  cat > "$_iter_script" << 'INNEREOF'
+media_mesh -mkv "$file"
+INNEREOF
+  bash "$_iter_script"
+  rm -f "$_iter_script"
+done
+EOF
+sh "$_cm" "$@"; rm -f "$_cm"' -- %F
 
 [Desktop Action Action2]
-Name=Convert to WEBM
+Name=Convert Video ▸ To WEBM
 Icon=video-x-generic
-Exec=media_mesh -webm %F
+Exec=sh -c '_cm=$(mktemp); cat > "$_cm" << '"'"'EOF'"'"'
+if ! command -v media_mesh >/dev/null 2>&1; then
+  zenity --error --text="Required binary 'media_mesh' not found." 2>/dev/null || kdialog --error "Required binary 'media_mesh' not found." 2>/dev/null
+  exit 1
+fi
+for file in "$@"; do
+  export file
+  export dir="$(dirname "$file")"
+  export filename="$(basename "$file")"
+  ext="${filename##*.}"
+  [ "$ext" = "$filename" ] && ext=""
+  export ext
+  export basename="${filename%.*}"
+  export count=$#
+  _iter_script=$(mktemp)
+  cat > "$_iter_script" << 'INNEREOF'
+media_mesh -webm "$file"
+INNEREOF
+  bash "$_iter_script"
+  rm -f "$_iter_script"
+done
+EOF
+sh "$_cm" "$@"; rm -f "$_cm"' -- %F
 
 [Desktop Action Action3]
-Name=Convert to AV1
+Name=Convert Video ▸ To AV1
 Icon=video-x-generic
-Exec=media_mesh -av1 %F
+Exec=sh -c '_cm=$(mktemp); cat > "$_cm" << '"'"'EOF'"'"'
+if ! command -v media_mesh >/dev/null 2>&1; then
+  zenity --error --text="Required binary 'media_mesh' not found." 2>/dev/null || kdialog --error "Required binary 'media_mesh' not found." 2>/dev/null
+  exit 1
+fi
+for file in "$@"; do
+  export file
+  export dir="$(dirname "$file")"
+  export filename="$(basename "$file")"
+  ext="${filename##*.}"
+  [ "$ext" = "$filename" ] && ext=""
+  export ext
+  export basename="${filename%.*}"
+  export count=$#
+  _iter_script=$(mktemp)
+  cat > "$_iter_script" << 'INNEREOF'
+media_mesh -av1 "$file"
+INNEREOF
+  bash "$_iter_script"
+  rm -f "$_iter_script"
+done
+EOF
+sh "$_cm" "$@"; rm -f "$_cm"' -- %F
 
 [Desktop Action Action4]
-Name=DaVinci Resolve (DNxHD)
+Name=Convert Video ▸ Professional ▸ DaVinci Resolve (DNxHD)
 Icon=video-x-generic
-Exec=media_mesh -davinci %F
+Exec=sh -c '_cm=$(mktemp); cat > "$_cm" << '"'"'EOF'"'"'
+if ! command -v media_mesh >/dev/null 2>&1; then
+  zenity --error --text="Required binary 'media_mesh' not found." 2>/dev/null || kdialog --error "Required binary 'media_mesh' not found." 2>/dev/null
+  exit 1
+fi
+for file in "$@"; do
+  export file
+  export dir="$(dirname "$file")"
+  export filename="$(basename "$file")"
+  ext="${filename##*.}"
+  [ "$ext" = "$filename" ] && ext=""
+  export ext
+  export basename="${filename%.*}"
+  export count=$#
+  _iter_script=$(mktemp)
+  cat > "$_iter_script" << 'INNEREOF'
+media_mesh -davinci "$file"
+INNEREOF
+  bash "$_iter_script"
+  rm -f "$_iter_script"
+done
+EOF
+sh "$_cm" "$@"; rm -f "$_cm"' -- %F
 
 [Desktop Action Action5]
-Name=Apple ProRes (HQ)
+Name=Convert Video ▸ Professional ▸ Apple ProRes (HQ)
 Icon=video-x-generic
-Exec=media_mesh -prores %F
+Exec=sh -c '_cm=$(mktemp); cat > "$_cm" << '"'"'EOF'"'"'
+if ! command -v media_mesh >/dev/null 2>&1; then
+  zenity --error --text="Required binary 'media_mesh' not found." 2>/dev/null || kdialog --error "Required binary 'media_mesh' not found." 2>/dev/null
+  exit 1
+fi
+for file in "$@"; do
+  export file
+  export dir="$(dirname "$file")"
+  export filename="$(basename "$file")"
+  ext="${filename##*.}"
+  [ "$ext" = "$filename" ] && ext=""
+  export ext
+  export basename="${filename%.*}"
+  export count=$#
+  _iter_script=$(mktemp)
+  cat > "$_iter_script" << 'INNEREOF'
+media_mesh -prores "$file"
+INNEREOF
+  bash "$_iter_script"
+  rm -f "$_iter_script"
+done
+EOF
+sh "$_cm" "$@"; rm -f "$_cm"' -- %F
 
