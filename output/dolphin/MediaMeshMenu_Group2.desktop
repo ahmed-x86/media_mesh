@@ -9,13 +9,15 @@
 [Desktop Entry]
 Type=Service
 X-KDE-ServiceTypes=KonqPopupMenu/Plugin
-MimeType=text/vnd.trolltech.linguist;video/mp4;video/quicktime;video/webm;video/x-flv;video/x-matroska;video/x-ms-wmv;video/x-msvideo;
+MimeType=audio/aac;audio/mp4;audio/mpeg;audio/ogg;audio/x-flac;audio/x-wav;image/bmp;image/gif;image/jpeg;image/png;image/vnd.microsoft.icon;image/webp;text/vnd.trolltech.linguist;video/mp4;video/quicktime;video/webm;video/x-flv;video/x-matroska;video/x-ms-wmv;video/x-msvideo;
 X-KDE-Submenu=Media Mesh
+X-KDE-Submenu[ar]=ميديا ميش
 Icon=video-x-generic
 Actions=Action0;Action1;Action2;Action3;Action4;Action5;
 
 [Desktop Action Action0]
 Name=Convert Video ▸ To MP4
+Name[ar]=تحويل الفيديو ▸ إلى MP4
 Icon=video-x-generic
 Exec=sh -c '_cm=$(mktemp); cat > "$_cm" << '"'"'EOF'"'"'
 if ! command -v media_mesh >/dev/null 2>&1; then
@@ -43,6 +45,7 @@ sh "$_cm" "$@"; rm -f "$_cm"' -- %F
 
 [Desktop Action Action1]
 Name=Convert Video ▸ To MKV
+Name[ar]=تحويل الفيديو ▸ إلى MKV
 Icon=video-x-generic
 Exec=sh -c '_cm=$(mktemp); cat > "$_cm" << '"'"'EOF'"'"'
 if ! command -v media_mesh >/dev/null 2>&1; then
@@ -70,6 +73,7 @@ sh "$_cm" "$@"; rm -f "$_cm"' -- %F
 
 [Desktop Action Action2]
 Name=Convert Video ▸ To WEBM
+Name[ar]=تحويل الفيديو ▸ إلى WEBM
 Icon=video-x-generic
 Exec=sh -c '_cm=$(mktemp); cat > "$_cm" << '"'"'EOF'"'"'
 if ! command -v media_mesh >/dev/null 2>&1; then
@@ -97,6 +101,7 @@ sh "$_cm" "$@"; rm -f "$_cm"' -- %F
 
 [Desktop Action Action3]
 Name=Convert Video ▸ To AV1
+Name[ar]=تحويل الفيديو ▸ إلى AV1
 Icon=video-x-generic
 Exec=sh -c '_cm=$(mktemp); cat > "$_cm" << '"'"'EOF'"'"'
 if ! command -v media_mesh >/dev/null 2>&1; then
@@ -124,6 +129,7 @@ sh "$_cm" "$@"; rm -f "$_cm"' -- %F
 
 [Desktop Action Action4]
 Name=Convert Video ▸ Professional ▸ DaVinci Resolve (DNxHD)
+Name[ar]=تحويل الفيديو ▸ احترافي ▸ دافينشي ريزولف (DNxHD)
 Icon=video-x-generic
 Exec=sh -c '_cm=$(mktemp); cat > "$_cm" << '"'"'EOF'"'"'
 if ! command -v media_mesh >/dev/null 2>&1; then
@@ -151,6 +157,7 @@ sh "$_cm" "$@"; rm -f "$_cm"' -- %F
 
 [Desktop Action Action5]
 Name=Convert Video ▸ Professional ▸ Apple ProRes (HQ)
+Name[ar]=تحويل الفيديو ▸ احترافي ▸ أبل برو ريز (HQ)
 Icon=video-x-generic
 Exec=sh -c '_cm=$(mktemp); cat > "$_cm" << '"'"'EOF'"'"'
 if ! command -v media_mesh >/dev/null 2>&1; then
@@ -175,4 +182,3 @@ INNEREOF
 done
 EOF
 sh "$_cm" "$@"; rm -f "$_cm"' -- %F
-
