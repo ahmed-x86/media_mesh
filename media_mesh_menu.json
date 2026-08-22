@@ -9,7 +9,10 @@
         "caja"
     ],
     "menu": {
-        "title": "Media Mesh",
+        "title": {
+            "en": "Media Mesh",
+            "ar": "ميديا ميش"
+        },
         "icon": "video-x-generic",
         "extensions": [
             ".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts",
@@ -17,9 +20,12 @@
             ".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp", ".ico"
         ],
         "directories": false,
-        "sub_items": [
+        "items": [
             {
-                "name": "Show Media Info",
+                "name": {
+                    "en": "Show Media Info",
+                    "ar": "عرض معلومات الوسائط"
+                },
                 "command": "media_mesh -info %file",
                 "icon": "dialog-information",
                 "requires_binary": "media_mesh",
@@ -31,130 +37,152 @@
                 ]
             },
             {
-                "name": "To MP4",
-                "group": "Convert Video",
-                "command": "media_mesh -mp4 %file",
+                "group": {
+                    "en": "Convert Video",
+                    "ar": "تحويل الفيديو"
+                },
                 "icon": "video-x-generic",
-                "requires_binary": "media_mesh",
-                "max_files": 1,
-                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
+                "items": [
+                    {
+                        "name": {"en": "To MP4", "ar": "إلى MP4"},
+                        "command": "media_mesh -mp4 %file",
+                        "icon": "video-x-generic",
+                        "requires_binary": "media_mesh",
+                        "max_files": 1,
+                        "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
+                    },
+                    {
+                        "name": {"en": "To MKV", "ar": "إلى MKV"},
+                        "command": "media_mesh -mkv %file",
+                        "icon": "video-x-generic",
+                        "requires_binary": "media_mesh",
+                        "max_files": 1,
+                        "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
+                    },
+                    {
+                        "name": {"en": "To WEBM", "ar": "إلى WEBM"},
+                        "command": "media_mesh -webm %file",
+                        "icon": "video-x-generic",
+                        "requires_binary": "media_mesh",
+                        "max_files": 1,
+                        "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
+                    },
+                    {
+                        "name": {"en": "To AV1", "ar": "إلى AV1"},
+                        "command": "media_mesh -av1 %file",
+                        "icon": "video-x-generic",
+                        "requires_binary": "media_mesh",
+                        "max_files": 1,
+                        "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
+                    },
+                    {
+                        "group": {
+                            "en": "Professional",
+                            "ar": "احترافي"
+                        },
+                        "icon": "video-x-generic",
+                        "items": [
+                            {
+                                "name": {"en": "DaVinci Resolve (DNxHD)", "ar": "دافينشي ريزولف (DNxHD)"},
+                                "command": "media_mesh -davinci %file",
+                                "icon": "video-x-generic",
+                                "requires_binary": "media_mesh",
+                                "max_files": 1,
+                                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
+                            },
+                            {
+                                "name": {"en": "Apple ProRes (HQ)", "ar": "أبل برو ريز (HQ)"},
+                                "command": "media_mesh -prores %file",
+                                "icon": "video-x-generic",
+                                "requires_binary": "media_mesh",
+                                "max_files": 1,
+                                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
+                            }
+                        ]
+                    }
+                ]
             },
             {
-                "name": "To MKV",
-                "group": "Convert Video",
-                "command": "media_mesh -mkv %file",
-                "icon": "video-x-generic",
-                "requires_binary": "media_mesh",
-                "max_files": 1,
-                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
-            },
-            {
-                "name": "To WEBM",
-                "group": "Convert Video",
-                "command": "media_mesh -webm %file",
-                "icon": "video-x-generic",
-                "requires_binary": "media_mesh",
-                "max_files": 1,
-                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
-            },
-            {
-                "name": "To AV1",
-                "group": "Convert Video",
-                "command": "media_mesh -av1 %file",
-                "icon": "video-x-generic",
-                "requires_binary": "media_mesh",
-                "max_files": 1,
-                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
-            },
-            {
-                "name": "DaVinci Resolve (DNxHD)",
-                "group": "Convert Video/Professional",
-                "command": "media_mesh -davinci %file",
-                "icon": "video-x-generic",
-                "requires_binary": "media_mesh",
-                "max_files": 1,
-                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
-            },
-            {
-                "name": "Apple ProRes (HQ)",
-                "group": "Convert Video/Professional",
-                "command": "media_mesh -prores %file",
-                "icon": "video-x-generic",
-                "requires_binary": "media_mesh",
-                "max_files": 1,
-                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts"]
-            },
-            {
-                "name": "Extract MP3",
-                "group": "Extract Audio",
-                "command": "media_mesh -mp3 %file",
+                "group": {
+                    "en": "Extract Audio",
+                    "ar": "استخراج الصوت"
+                },
                 "icon": "audio-x-generic",
-                "requires_binary": "media_mesh",
-                "max_files": 1,
-                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts", ".mp3", ".aac", ".wav", ".flac", ".ogg", ".m4a"]
+                "items": [
+                    {
+                        "name": {"en": "Extract MP3", "ar": "استخراج MP3"},
+                        "command": "media_mesh -mp3 %file",
+                        "icon": "audio-x-generic",
+                        "requires_binary": "media_mesh",
+                        "max_files": 1,
+                        "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts", ".mp3", ".aac", ".wav", ".flac", ".ogg", ".m4a"]
+                    },
+                    {
+                        "name": {"en": "Extract AAC", "ar": "استخراج AAC"},
+                        "command": "media_mesh -aac %file",
+                        "icon": "audio-x-generic",
+                        "requires_binary": "media_mesh",
+                        "max_files": 1,
+                        "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts", ".mp3", ".aac", ".wav", ".flac", ".ogg", ".m4a"]
+                    },
+                    {
+                        "name": {"en": "Extract WAV", "ar": "استخراج WAV"},
+                        "command": "media_mesh -wav %file",
+                        "icon": "audio-x-generic",
+                        "requires_binary": "media_mesh",
+                        "max_files": 1,
+                        "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts", ".mp3", ".aac", ".wav", ".flac", ".ogg", ".m4a"]
+                    }
+                ]
             },
             {
-                "name": "Extract AAC",
-                "group": "Extract Audio",
-                "command": "media_mesh -aac %file",
-                "icon": "audio-x-generic",
-                "requires_binary": "media_mesh",
-                "max_files": 1,
-                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts", ".mp3", ".aac", ".wav", ".flac", ".ogg", ".m4a"]
-            },
-            {
-                "name": "Extract WAV",
-                "group": "Extract Audio",
-                "command": "media_mesh -wav %file",
-                "icon": "audio-x-generic",
-                "requires_binary": "media_mesh",
-                "max_files": 1,
-                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts", ".mp3", ".aac", ".wav", ".flac", ".ogg", ".m4a"]
-            },
-            {
-                "name": "To GIF",
-                "group": "Images & Animations",
-                "command": "media_mesh -gif %file",
+                "group": {
+                    "en": "Images & Animations",
+                    "ar": "صور ورسوم متحركة"
+                },
                 "icon": "image-x-generic",
-                "requires_binary": "media_mesh",
-                "max_files": 1,
-                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts", ".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp", ".ico"]
-            },
-            {
-                "name": "To WEBP",
-                "group": "Images & Animations",
-                "command": "media_mesh -webp %file",
-                "icon": "image-x-generic",
-                "requires_binary": "media_mesh",
-                "max_files": 1,
-                "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts", ".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp", ".ico"]
-            },
-            {
-                "name": "To JPG",
-                "group": "Images & Animations",
-                "command": "media_mesh -jpg %file",
-                "icon": "image-x-generic",
-                "requires_binary": "media_mesh",
-                "max_files": 1,
-                "supported_extensions": [".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp", ".ico"]
-            },
-            {
-                "name": "To BMP",
-                "group": "Images & Animations",
-                "command": "media_mesh -bmp %file",
-                "icon": "image-x-generic",
-                "requires_binary": "media_mesh",
-                "max_files": 1,
-                "supported_extensions": [".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp", ".ico"]
-            },
-            {
-                "name": "To ICO",
-                "group": "Images & Animations",
-                "command": "media_mesh -ico %file",
-                "icon": "image-x-generic",
-                "requires_binary": "media_mesh",
-                "max_files": 1,
-                "supported_extensions": [".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp", ".ico"]
+                "items": [
+                    {
+                        "name": {"en": "To GIF", "ar": "إلى GIF"},
+                        "command": "media_mesh -gif %file",
+                        "icon": "image-x-generic",
+                        "requires_binary": "media_mesh",
+                        "max_files": 1,
+                        "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts", ".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp", ".ico"]
+                    },
+                    {
+                        "name": {"en": "To WEBP", "ar": "إلى WEBP"},
+                        "command": "media_mesh -webp %file",
+                        "icon": "image-x-generic",
+                        "requires_binary": "media_mesh",
+                        "max_files": 1,
+                        "supported_extensions": [".mp4", ".mkv", ".webm", ".mov", ".avi", ".wmv", ".flv", ".ts", ".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp", ".ico"]
+                    },
+                    {
+                        "name": {"en": "To JPG", "ar": "إلى JPG"},
+                        "command": "media_mesh -jpg %file",
+                        "icon": "image-x-generic",
+                        "requires_binary": "media_mesh",
+                        "max_files": 1,
+                        "supported_extensions": [".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp", ".ico"]
+                    },
+                    {
+                        "name": {"en": "To BMP", "ar": "إلى BMP"},
+                        "command": "media_mesh -bmp %file",
+                        "icon": "image-x-generic",
+                        "requires_binary": "media_mesh",
+                        "max_files": 1,
+                        "supported_extensions": [".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp", ".ico"]
+                    },
+                    {
+                        "name": {"en": "To ICO", "ar": "إلى ICO"},
+                        "command": "media_mesh -ico %file",
+                        "icon": "image-x-generic",
+                        "requires_binary": "media_mesh",
+                        "max_files": 1,
+                        "supported_extensions": [".jpg", ".jpeg", ".png", ".webp", ".gif", ".bmp", ".ico"]
+                    }
+                ]
             }
         ]
     }
