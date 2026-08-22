@@ -8,9 +8,13 @@ modifying this file directly.
 import os
 import shlex
 import subprocess
+import shutil
+import threading
 from urllib.parse import unquote
 
-from gi.repository import Nautilus, GObject
+import gi
+gi.require_version('Gtk', '3.0')
+from gi.repository import Nautilus, GObject, Gtk, GLib
 
 # ---------------------------------------------------------------------------
 #  Helpers
@@ -23,263 +27,416 @@ def _path_from_item(file_item):
         return unquote(uri[7:])
     return unquote(uri)
 
+def _confirm(message: str) -> bool:
+    if not Gtk: return True
+    dialog = Gtk.MessageDialog(
+        flags=0,
+        message_type=Gtk.MessageType.QUESTION,
+        buttons=Gtk.ButtonsType.YES_NO,
+        text=message
+    )
+    response = dialog.run()
+    dialog.destroy()
+    return response == Gtk.ResponseType.YES
+
+def _show_error(message: str):
+    if not Gtk:
+        subprocess.run(['notify-send', '-i', 'dialog-error', 'ClickMesh Error', message])
+        return
+    dialog = Gtk.MessageDialog(
+        flags=0,
+        message_type=Gtk.MessageType.ERROR,
+        buttons=Gtk.ButtonsType.OK,
+        text=message
+    )
+    dialog.run()
+    dialog.destroy()
+
+def _run_in_terminal(cmd: str):
+    terms = ['x-terminal-emulator', 'gnome-terminal', 'konsole', 'xfce4-terminal', 'xterm']
+    term = next((t for t in terms if shutil.which(t)), None)
+    script = f"{cmd}; echo; read -p 'Press Enter to close...'"
+    if not term:
+        subprocess.run(cmd, shell=True)
+        return
+    if term == 'gnome-terminal' or term == '/usr/bin/gnome-terminal':
+        subprocess.run([term, '--', 'bash', '-c', script])
+    else:
+        subprocess.run([term, '-e', 'bash', '-c', script])
+
+def _execute_cmds(cmds: list, show_output: bool, notify: bool, name: str):
+    def worker():
+        for cmd in cmds:
+            if show_output:
+                _run_in_terminal(cmd)
+            else:
+                subprocess.run(cmd, shell=True)
+        if notify:
+            subprocess.run(["notify-send", "-i", "dialog-information", "ClickMesh", f"Action '{name}' completed."])
+    threading.Thread(target=worker, daemon=True).start()
+
 # ---------------------------------------------------------------------------
 #  Action callbacks
 # ---------------------------------------------------------------------------
 
 def _on_action_0(menu_item, files):
     """Callback: Show Media Info"""
+    if not shutil.which('media_mesh'):
+        _show_error(f"Required binary '{ 'media_mesh' }' not found.")
+        return
+    cmds = []
+    count = len(files)
     for file_item in files:
         path = _path_from_item(file_item)
-        cmd = 'media_mesh -info %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'Show Media Info': {exc}")
+        _dir = os.path.dirname(path)
+        _filename = os.path.basename(path)
+        _basename, _ext = os.path.splitext(_filename)
+        if _ext.startswith('.'): _ext = _ext[1:]
+        cmd = 'media_mesh -info %file'
+        cmd = cmd.replace('%count', str(count))
+        cmd = cmd.replace('%filename', shlex.quote(_filename))
+        cmd = cmd.replace('%basename', shlex.quote(_basename))
+        cmd = cmd.replace('%ext', shlex.quote(_ext))
+        cmd = cmd.replace('%dir', shlex.quote(_dir))
+        cmd = cmd.replace('%file', shlex.quote(path))
+        cmds.append(cmd)
+    _execute_cmds(cmds, show_output=False, notify=False, name='Show Media Info')
 
 
 def _on_action_1(menu_item, files):
-    """Callback: Convert to MP4"""
+    """Callback: To MP4"""
+    if not shutil.which('media_mesh'):
+        _show_error(f"Required binary '{ 'media_mesh' }' not found.")
+        return
+    cmds = []
+    count = len(files)
     for file_item in files:
         path = _path_from_item(file_item)
-        cmd = 'media_mesh -mp4 %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'Convert to MP4': {exc}")
+        _dir = os.path.dirname(path)
+        _filename = os.path.basename(path)
+        _basename, _ext = os.path.splitext(_filename)
+        if _ext.startswith('.'): _ext = _ext[1:]
+        cmd = 'media_mesh -mp4 %file'
+        cmd = cmd.replace('%count', str(count))
+        cmd = cmd.replace('%filename', shlex.quote(_filename))
+        cmd = cmd.replace('%basename', shlex.quote(_basename))
+        cmd = cmd.replace('%ext', shlex.quote(_ext))
+        cmd = cmd.replace('%dir', shlex.quote(_dir))
+        cmd = cmd.replace('%file', shlex.quote(path))
+        cmds.append(cmd)
+    _execute_cmds(cmds, show_output=False, notify=False, name='To MP4')
 
 
 def _on_action_2(menu_item, files):
-    """Callback: Convert to MKV"""
+    """Callback: To MKV"""
+    if not shutil.which('media_mesh'):
+        _show_error(f"Required binary '{ 'media_mesh' }' not found.")
+        return
+    cmds = []
+    count = len(files)
     for file_item in files:
         path = _path_from_item(file_item)
-        cmd = 'media_mesh -mkv %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'Convert to MKV': {exc}")
+        _dir = os.path.dirname(path)
+        _filename = os.path.basename(path)
+        _basename, _ext = os.path.splitext(_filename)
+        if _ext.startswith('.'): _ext = _ext[1:]
+        cmd = 'media_mesh -mkv %file'
+        cmd = cmd.replace('%count', str(count))
+        cmd = cmd.replace('%filename', shlex.quote(_filename))
+        cmd = cmd.replace('%basename', shlex.quote(_basename))
+        cmd = cmd.replace('%ext', shlex.quote(_ext))
+        cmd = cmd.replace('%dir', shlex.quote(_dir))
+        cmd = cmd.replace('%file', shlex.quote(path))
+        cmds.append(cmd)
+    _execute_cmds(cmds, show_output=False, notify=False, name='To MKV')
 
 
 def _on_action_3(menu_item, files):
-    """Callback: Convert to WEBM"""
+    """Callback: To WEBM"""
+    if not shutil.which('media_mesh'):
+        _show_error(f"Required binary '{ 'media_mesh' }' not found.")
+        return
+    cmds = []
+    count = len(files)
     for file_item in files:
         path = _path_from_item(file_item)
-        cmd = 'media_mesh -webm %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'Convert to WEBM': {exc}")
+        _dir = os.path.dirname(path)
+        _filename = os.path.basename(path)
+        _basename, _ext = os.path.splitext(_filename)
+        if _ext.startswith('.'): _ext = _ext[1:]
+        cmd = 'media_mesh -webm %file'
+        cmd = cmd.replace('%count', str(count))
+        cmd = cmd.replace('%filename', shlex.quote(_filename))
+        cmd = cmd.replace('%basename', shlex.quote(_basename))
+        cmd = cmd.replace('%ext', shlex.quote(_ext))
+        cmd = cmd.replace('%dir', shlex.quote(_dir))
+        cmd = cmd.replace('%file', shlex.quote(path))
+        cmds.append(cmd)
+    _execute_cmds(cmds, show_output=False, notify=False, name='To WEBM')
 
 
 def _on_action_4(menu_item, files):
-    """Callback: Convert to AV1"""
+    """Callback: To AV1"""
+    if not shutil.which('media_mesh'):
+        _show_error(f"Required binary '{ 'media_mesh' }' not found.")
+        return
+    cmds = []
+    count = len(files)
     for file_item in files:
         path = _path_from_item(file_item)
-        cmd = 'media_mesh -av1 %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'Convert to AV1': {exc}")
+        _dir = os.path.dirname(path)
+        _filename = os.path.basename(path)
+        _basename, _ext = os.path.splitext(_filename)
+        if _ext.startswith('.'): _ext = _ext[1:]
+        cmd = 'media_mesh -av1 %file'
+        cmd = cmd.replace('%count', str(count))
+        cmd = cmd.replace('%filename', shlex.quote(_filename))
+        cmd = cmd.replace('%basename', shlex.quote(_basename))
+        cmd = cmd.replace('%ext', shlex.quote(_ext))
+        cmd = cmd.replace('%dir', shlex.quote(_dir))
+        cmd = cmd.replace('%file', shlex.quote(path))
+        cmds.append(cmd)
+    _execute_cmds(cmds, show_output=False, notify=False, name='To AV1')
 
 
 def _on_action_5(menu_item, files):
     """Callback: DaVinci Resolve (DNxHD)"""
+    if not shutil.which('media_mesh'):
+        _show_error(f"Required binary '{ 'media_mesh' }' not found.")
+        return
+    cmds = []
+    count = len(files)
     for file_item in files:
         path = _path_from_item(file_item)
-        cmd = 'media_mesh -davinci %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'DaVinci Resolve (DNxHD)': {exc}")
+        _dir = os.path.dirname(path)
+        _filename = os.path.basename(path)
+        _basename, _ext = os.path.splitext(_filename)
+        if _ext.startswith('.'): _ext = _ext[1:]
+        cmd = 'media_mesh -davinci %file'
+        cmd = cmd.replace('%count', str(count))
+        cmd = cmd.replace('%filename', shlex.quote(_filename))
+        cmd = cmd.replace('%basename', shlex.quote(_basename))
+        cmd = cmd.replace('%ext', shlex.quote(_ext))
+        cmd = cmd.replace('%dir', shlex.quote(_dir))
+        cmd = cmd.replace('%file', shlex.quote(path))
+        cmds.append(cmd)
+    _execute_cmds(cmds, show_output=False, notify=False, name='DaVinci Resolve (DNxHD)')
 
 
 def _on_action_6(menu_item, files):
     """Callback: Apple ProRes (HQ)"""
+    if not shutil.which('media_mesh'):
+        _show_error(f"Required binary '{ 'media_mesh' }' not found.")
+        return
+    cmds = []
+    count = len(files)
     for file_item in files:
         path = _path_from_item(file_item)
-        cmd = 'media_mesh -prores %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'Apple ProRes (HQ)': {exc}")
+        _dir = os.path.dirname(path)
+        _filename = os.path.basename(path)
+        _basename, _ext = os.path.splitext(_filename)
+        if _ext.startswith('.'): _ext = _ext[1:]
+        cmd = 'media_mesh -prores %file'
+        cmd = cmd.replace('%count', str(count))
+        cmd = cmd.replace('%filename', shlex.quote(_filename))
+        cmd = cmd.replace('%basename', shlex.quote(_basename))
+        cmd = cmd.replace('%ext', shlex.quote(_ext))
+        cmd = cmd.replace('%dir', shlex.quote(_dir))
+        cmd = cmd.replace('%file', shlex.quote(path))
+        cmds.append(cmd)
+    _execute_cmds(cmds, show_output=False, notify=False, name='Apple ProRes (HQ)')
 
 
 def _on_action_7(menu_item, files):
-    """Callback: Extract Audio (MP3)"""
+    """Callback: Extract MP3"""
+    if not shutil.which('media_mesh'):
+        _show_error(f"Required binary '{ 'media_mesh' }' not found.")
+        return
+    cmds = []
+    count = len(files)
     for file_item in files:
         path = _path_from_item(file_item)
-        cmd = 'media_mesh -mp3 %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'Extract Audio (MP3)': {exc}")
+        _dir = os.path.dirname(path)
+        _filename = os.path.basename(path)
+        _basename, _ext = os.path.splitext(_filename)
+        if _ext.startswith('.'): _ext = _ext[1:]
+        cmd = 'media_mesh -mp3 %file'
+        cmd = cmd.replace('%count', str(count))
+        cmd = cmd.replace('%filename', shlex.quote(_filename))
+        cmd = cmd.replace('%basename', shlex.quote(_basename))
+        cmd = cmd.replace('%ext', shlex.quote(_ext))
+        cmd = cmd.replace('%dir', shlex.quote(_dir))
+        cmd = cmd.replace('%file', shlex.quote(path))
+        cmds.append(cmd)
+    _execute_cmds(cmds, show_output=False, notify=False, name='Extract MP3')
 
 
 def _on_action_8(menu_item, files):
-    """Callback: Extract Audio (AAC)"""
+    """Callback: Extract AAC"""
+    if not shutil.which('media_mesh'):
+        _show_error(f"Required binary '{ 'media_mesh' }' not found.")
+        return
+    cmds = []
+    count = len(files)
     for file_item in files:
         path = _path_from_item(file_item)
-        cmd = 'media_mesh -aac %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'Extract Audio (AAC)': {exc}")
+        _dir = os.path.dirname(path)
+        _filename = os.path.basename(path)
+        _basename, _ext = os.path.splitext(_filename)
+        if _ext.startswith('.'): _ext = _ext[1:]
+        cmd = 'media_mesh -aac %file'
+        cmd = cmd.replace('%count', str(count))
+        cmd = cmd.replace('%filename', shlex.quote(_filename))
+        cmd = cmd.replace('%basename', shlex.quote(_basename))
+        cmd = cmd.replace('%ext', shlex.quote(_ext))
+        cmd = cmd.replace('%dir', shlex.quote(_dir))
+        cmd = cmd.replace('%file', shlex.quote(path))
+        cmds.append(cmd)
+    _execute_cmds(cmds, show_output=False, notify=False, name='Extract AAC')
 
 
 def _on_action_9(menu_item, files):
-    """Callback: Extract Audio (WAV)"""
+    """Callback: Extract WAV"""
+    if not shutil.which('media_mesh'):
+        _show_error(f"Required binary '{ 'media_mesh' }' not found.")
+        return
+    cmds = []
+    count = len(files)
     for file_item in files:
         path = _path_from_item(file_item)
-        cmd = 'media_mesh -wav %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'Extract Audio (WAV)': {exc}")
+        _dir = os.path.dirname(path)
+        _filename = os.path.basename(path)
+        _basename, _ext = os.path.splitext(_filename)
+        if _ext.startswith('.'): _ext = _ext[1:]
+        cmd = 'media_mesh -wav %file'
+        cmd = cmd.replace('%count', str(count))
+        cmd = cmd.replace('%filename', shlex.quote(_filename))
+        cmd = cmd.replace('%basename', shlex.quote(_basename))
+        cmd = cmd.replace('%ext', shlex.quote(_ext))
+        cmd = cmd.replace('%dir', shlex.quote(_dir))
+        cmd = cmd.replace('%file', shlex.quote(path))
+        cmds.append(cmd)
+    _execute_cmds(cmds, show_output=False, notify=False, name='Extract WAV')
 
 
 def _on_action_10(menu_item, files):
-    """Callback: Convert to GIF"""
+    """Callback: To GIF"""
+    if not shutil.which('media_mesh'):
+        _show_error(f"Required binary '{ 'media_mesh' }' not found.")
+        return
+    cmds = []
+    count = len(files)
     for file_item in files:
         path = _path_from_item(file_item)
-        cmd = 'media_mesh -gif %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'Convert to GIF': {exc}")
+        _dir = os.path.dirname(path)
+        _filename = os.path.basename(path)
+        _basename, _ext = os.path.splitext(_filename)
+        if _ext.startswith('.'): _ext = _ext[1:]
+        cmd = 'media_mesh -gif %file'
+        cmd = cmd.replace('%count', str(count))
+        cmd = cmd.replace('%filename', shlex.quote(_filename))
+        cmd = cmd.replace('%basename', shlex.quote(_basename))
+        cmd = cmd.replace('%ext', shlex.quote(_ext))
+        cmd = cmd.replace('%dir', shlex.quote(_dir))
+        cmd = cmd.replace('%file', shlex.quote(path))
+        cmds.append(cmd)
+    _execute_cmds(cmds, show_output=False, notify=False, name='To GIF')
 
 
 def _on_action_11(menu_item, files):
-    """Callback: Convert to WEBP"""
+    """Callback: To WEBP"""
+    if not shutil.which('media_mesh'):
+        _show_error(f"Required binary '{ 'media_mesh' }' not found.")
+        return
+    cmds = []
+    count = len(files)
     for file_item in files:
         path = _path_from_item(file_item)
-        cmd = 'media_mesh -webp %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'Convert to WEBP': {exc}")
+        _dir = os.path.dirname(path)
+        _filename = os.path.basename(path)
+        _basename, _ext = os.path.splitext(_filename)
+        if _ext.startswith('.'): _ext = _ext[1:]
+        cmd = 'media_mesh -webp %file'
+        cmd = cmd.replace('%count', str(count))
+        cmd = cmd.replace('%filename', shlex.quote(_filename))
+        cmd = cmd.replace('%basename', shlex.quote(_basename))
+        cmd = cmd.replace('%ext', shlex.quote(_ext))
+        cmd = cmd.replace('%dir', shlex.quote(_dir))
+        cmd = cmd.replace('%file', shlex.quote(path))
+        cmds.append(cmd)
+    _execute_cmds(cmds, show_output=False, notify=False, name='To WEBP')
 
 
 def _on_action_12(menu_item, files):
-    """Callback: Convert to JPG"""
+    """Callback: To JPG"""
+    if not shutil.which('media_mesh'):
+        _show_error(f"Required binary '{ 'media_mesh' }' not found.")
+        return
+    cmds = []
+    count = len(files)
     for file_item in files:
         path = _path_from_item(file_item)
-        cmd = 'media_mesh -jpg %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'Convert to JPG': {exc}")
+        _dir = os.path.dirname(path)
+        _filename = os.path.basename(path)
+        _basename, _ext = os.path.splitext(_filename)
+        if _ext.startswith('.'): _ext = _ext[1:]
+        cmd = 'media_mesh -jpg %file'
+        cmd = cmd.replace('%count', str(count))
+        cmd = cmd.replace('%filename', shlex.quote(_filename))
+        cmd = cmd.replace('%basename', shlex.quote(_basename))
+        cmd = cmd.replace('%ext', shlex.quote(_ext))
+        cmd = cmd.replace('%dir', shlex.quote(_dir))
+        cmd = cmd.replace('%file', shlex.quote(path))
+        cmds.append(cmd)
+    _execute_cmds(cmds, show_output=False, notify=False, name='To JPG')
 
 
 def _on_action_13(menu_item, files):
-    """Callback: Convert to BMP"""
+    """Callback: To BMP"""
+    if not shutil.which('media_mesh'):
+        _show_error(f"Required binary '{ 'media_mesh' }' not found.")
+        return
+    cmds = []
+    count = len(files)
     for file_item in files:
         path = _path_from_item(file_item)
-        cmd = 'media_mesh -bmp %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'Convert to BMP': {exc}")
+        _dir = os.path.dirname(path)
+        _filename = os.path.basename(path)
+        _basename, _ext = os.path.splitext(_filename)
+        if _ext.startswith('.'): _ext = _ext[1:]
+        cmd = 'media_mesh -bmp %file'
+        cmd = cmd.replace('%count', str(count))
+        cmd = cmd.replace('%filename', shlex.quote(_filename))
+        cmd = cmd.replace('%basename', shlex.quote(_basename))
+        cmd = cmd.replace('%ext', shlex.quote(_ext))
+        cmd = cmd.replace('%dir', shlex.quote(_dir))
+        cmd = cmd.replace('%file', shlex.quote(path))
+        cmds.append(cmd)
+    _execute_cmds(cmds, show_output=False, notify=False, name='To BMP')
 
 
 def _on_action_14(menu_item, files):
-    """Callback: Convert to ICO"""
+    """Callback: To ICO"""
+    if not shutil.which('media_mesh'):
+        _show_error(f"Required binary '{ 'media_mesh' }' not found.")
+        return
+    cmds = []
+    count = len(files)
     for file_item in files:
         path = _path_from_item(file_item)
-        cmd = 'media_mesh -ico %file'.replace("%file", shlex.quote(path))
-        try:
-            subprocess.Popen(
-                cmd,
-                shell=True,
-                start_new_session=True,
-                stdout=subprocess.DEVNULL,
-                stderr=subprocess.DEVNULL,
-            )
-        except Exception as exc:  # noqa: BLE001
-            print(f"[ClickMesh] Error in 'Convert to ICO': {exc}")
+        _dir = os.path.dirname(path)
+        _filename = os.path.basename(path)
+        _basename, _ext = os.path.splitext(_filename)
+        if _ext.startswith('.'): _ext = _ext[1:]
+        cmd = 'media_mesh -ico %file'
+        cmd = cmd.replace('%count', str(count))
+        cmd = cmd.replace('%filename', shlex.quote(_filename))
+        cmd = cmd.replace('%basename', shlex.quote(_basename))
+        cmd = cmd.replace('%ext', shlex.quote(_ext))
+        cmd = cmd.replace('%dir', shlex.quote(_dir))
+        cmd = cmd.replace('%file', shlex.quote(path))
+        cmds.append(cmd)
+    _execute_cmds(cmds, show_output=False, notify=False, name='To ICO')
 
 
 # ---------------------------------------------------------------------------
@@ -287,7 +444,7 @@ def _on_action_14(menu_item, files):
 # ---------------------------------------------------------------------------
 
 class MediameshmenuExtension(GObject.GObject, Nautilus.MenuProvider):
-    """Injects a 'Media Mesh Convert' submenu into the Nautilus right-click menu."""
+    """Injects a 'Media Mesh' submenu into the Nautilus right-click menu."""
 
     def get_file_items(self, *args):
         files = args[-1] if args else []
@@ -307,8 +464,8 @@ class MediameshmenuExtension(GObject.GObject, Nautilus.MenuProvider):
         # --- Top-level menu item (acts as a submenu header) -----------------
         top_item = Nautilus.MenuItem(
             name="MediaMeshMenu::TopMenu",
-            label="Media Mesh Convert",
-            tip="Media Mesh Convert",
+            label="Media Mesh",
+            tip="Media Mesh",
             icon="video-x-generic",
         )
         submenu = Nautilus.Menu()
@@ -316,17 +473,20 @@ class MediameshmenuExtension(GObject.GObject, Nautilus.MenuProvider):
 
         # --- Submenu entries ------------------------------------------------
         items_added = 0
+        # --- Menu Tree Setup ---
+        menus = {'': submenu}
         item_0_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts', '.mp3', '.aac', '.wav', '.flac', '.ogg', '.m4a', '.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp', '.ico')
         item_0_allow_all = False
         show_item_0 = False
 
-        if has_dir and allow_dirs:
-            show_item_0 = True
-        elif has_file:
-            if item_0_allow_all:
+        if 0 <= len(files) <= 1:
+            if has_dir and allow_dirs:
                 show_item_0 = True
-            else:
-                show_item_0 = any(any(p.lower().endswith(ext) for ext in item_0_exts) for p in paths if not os.path.isdir(p))
+            elif has_file:
+                if item_0_allow_all:
+                    show_item_0 = True
+                else:
+                    show_item_0 = any(any(p.lower().endswith(ext) for ext in item_0_exts) for p in paths if not os.path.isdir(p))
 
         if show_item_0:
             item_0 = Nautilus.MenuItem(
@@ -336,109 +496,150 @@ class MediameshmenuExtension(GObject.GObject, Nautilus.MenuProvider):
                 icon="dialog-information",
             )
             item_0.connect("activate", _on_action_0, files)
-            submenu.append_item(item_0)
+            menus[''].append_item(item_0)
             items_added += 1
         item_1_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts')
         item_1_allow_all = False
         show_item_1 = False
 
-        if has_dir and allow_dirs:
-            show_item_1 = True
-        elif has_file:
-            if item_1_allow_all:
+        if 0 <= len(files) <= 1:
+            if has_dir and allow_dirs:
                 show_item_1 = True
-            else:
-                show_item_1 = any(any(p.lower().endswith(ext) for ext in item_1_exts) for p in paths if not os.path.isdir(p))
+            elif has_file:
+                if item_1_allow_all:
+                    show_item_1 = True
+                else:
+                    show_item_1 = any(any(p.lower().endswith(ext) for ext in item_1_exts) for p in paths if not os.path.isdir(p))
 
         if show_item_1:
+            if 'Convert Video' not in menus:
+                group_item = Nautilus.MenuItem(name='MediaMeshMenu::Convert Video', label='Convert Video', tip='Convert Video')
+                group_menu = Nautilus.Menu()
+                group_item.set_submenu(group_menu)
+                menus[''].append_item(group_item)
+                menus['Convert Video'] = group_menu
             item_1 = Nautilus.MenuItem(
                 name="MediaMeshMenu::Action1",
-                label="Convert to MP4",
-                tip="Convert to MP4",
+                label="To MP4",
+                tip="To MP4",
                 icon="video-x-generic",
             )
             item_1.connect("activate", _on_action_1, files)
-            submenu.append_item(item_1)
+            menus['Convert Video'].append_item(item_1)
             items_added += 1
         item_2_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts')
         item_2_allow_all = False
         show_item_2 = False
 
-        if has_dir and allow_dirs:
-            show_item_2 = True
-        elif has_file:
-            if item_2_allow_all:
+        if 0 <= len(files) <= 1:
+            if has_dir and allow_dirs:
                 show_item_2 = True
-            else:
-                show_item_2 = any(any(p.lower().endswith(ext) for ext in item_2_exts) for p in paths if not os.path.isdir(p))
+            elif has_file:
+                if item_2_allow_all:
+                    show_item_2 = True
+                else:
+                    show_item_2 = any(any(p.lower().endswith(ext) for ext in item_2_exts) for p in paths if not os.path.isdir(p))
 
         if show_item_2:
+            if 'Convert Video' not in menus:
+                group_item = Nautilus.MenuItem(name='MediaMeshMenu::Convert Video', label='Convert Video', tip='Convert Video')
+                group_menu = Nautilus.Menu()
+                group_item.set_submenu(group_menu)
+                menus[''].append_item(group_item)
+                menus['Convert Video'] = group_menu
             item_2 = Nautilus.MenuItem(
                 name="MediaMeshMenu::Action2",
-                label="Convert to MKV",
-                tip="Convert to MKV",
+                label="To MKV",
+                tip="To MKV",
                 icon="video-x-generic",
             )
             item_2.connect("activate", _on_action_2, files)
-            submenu.append_item(item_2)
+            menus['Convert Video'].append_item(item_2)
             items_added += 1
         item_3_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts')
         item_3_allow_all = False
         show_item_3 = False
 
-        if has_dir and allow_dirs:
-            show_item_3 = True
-        elif has_file:
-            if item_3_allow_all:
+        if 0 <= len(files) <= 1:
+            if has_dir and allow_dirs:
                 show_item_3 = True
-            else:
-                show_item_3 = any(any(p.lower().endswith(ext) for ext in item_3_exts) for p in paths if not os.path.isdir(p))
+            elif has_file:
+                if item_3_allow_all:
+                    show_item_3 = True
+                else:
+                    show_item_3 = any(any(p.lower().endswith(ext) for ext in item_3_exts) for p in paths if not os.path.isdir(p))
 
         if show_item_3:
+            if 'Convert Video' not in menus:
+                group_item = Nautilus.MenuItem(name='MediaMeshMenu::Convert Video', label='Convert Video', tip='Convert Video')
+                group_menu = Nautilus.Menu()
+                group_item.set_submenu(group_menu)
+                menus[''].append_item(group_item)
+                menus['Convert Video'] = group_menu
             item_3 = Nautilus.MenuItem(
                 name="MediaMeshMenu::Action3",
-                label="Convert to WEBM",
-                tip="Convert to WEBM",
+                label="To WEBM",
+                tip="To WEBM",
                 icon="video-x-generic",
             )
             item_3.connect("activate", _on_action_3, files)
-            submenu.append_item(item_3)
+            menus['Convert Video'].append_item(item_3)
             items_added += 1
         item_4_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts')
         item_4_allow_all = False
         show_item_4 = False
 
-        if has_dir and allow_dirs:
-            show_item_4 = True
-        elif has_file:
-            if item_4_allow_all:
+        if 0 <= len(files) <= 1:
+            if has_dir and allow_dirs:
                 show_item_4 = True
-            else:
-                show_item_4 = any(any(p.lower().endswith(ext) for ext in item_4_exts) for p in paths if not os.path.isdir(p))
+            elif has_file:
+                if item_4_allow_all:
+                    show_item_4 = True
+                else:
+                    show_item_4 = any(any(p.lower().endswith(ext) for ext in item_4_exts) for p in paths if not os.path.isdir(p))
 
         if show_item_4:
+            if 'Convert Video' not in menus:
+                group_item = Nautilus.MenuItem(name='MediaMeshMenu::Convert Video', label='Convert Video', tip='Convert Video')
+                group_menu = Nautilus.Menu()
+                group_item.set_submenu(group_menu)
+                menus[''].append_item(group_item)
+                menus['Convert Video'] = group_menu
             item_4 = Nautilus.MenuItem(
                 name="MediaMeshMenu::Action4",
-                label="Convert to AV1",
-                tip="Convert to AV1",
+                label="To AV1",
+                tip="To AV1",
                 icon="video-x-generic",
             )
             item_4.connect("activate", _on_action_4, files)
-            submenu.append_item(item_4)
+            menus['Convert Video'].append_item(item_4)
             items_added += 1
         item_5_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts')
         item_5_allow_all = False
         show_item_5 = False
 
-        if has_dir and allow_dirs:
-            show_item_5 = True
-        elif has_file:
-            if item_5_allow_all:
+        if 0 <= len(files) <= 1:
+            if has_dir and allow_dirs:
                 show_item_5 = True
-            else:
-                show_item_5 = any(any(p.lower().endswith(ext) for ext in item_5_exts) for p in paths if not os.path.isdir(p))
+            elif has_file:
+                if item_5_allow_all:
+                    show_item_5 = True
+                else:
+                    show_item_5 = any(any(p.lower().endswith(ext) for ext in item_5_exts) for p in paths if not os.path.isdir(p))
 
         if show_item_5:
+            if 'Convert Video' not in menus:
+                group_item = Nautilus.MenuItem(name='MediaMeshMenu::Convert Video', label='Convert Video', tip='Convert Video')
+                group_menu = Nautilus.Menu()
+                group_item.set_submenu(group_menu)
+                menus[''].append_item(group_item)
+                menus['Convert Video'] = group_menu
+            if 'Convert Video/Professional' not in menus:
+                group_item = Nautilus.MenuItem(name='MediaMeshMenu::Convert Video/Professional', label='Professional', tip='Professional')
+                group_menu = Nautilus.Menu()
+                group_item.set_submenu(group_menu)
+                menus['Convert Video'].append_item(group_item)
+                menus['Convert Video/Professional'] = group_menu
             item_5 = Nautilus.MenuItem(
                 name="MediaMeshMenu::Action5",
                 label="DaVinci Resolve (DNxHD)",
@@ -446,21 +647,34 @@ class MediameshmenuExtension(GObject.GObject, Nautilus.MenuProvider):
                 icon="video-x-generic",
             )
             item_5.connect("activate", _on_action_5, files)
-            submenu.append_item(item_5)
+            menus['Convert Video/Professional'].append_item(item_5)
             items_added += 1
         item_6_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts')
         item_6_allow_all = False
         show_item_6 = False
 
-        if has_dir and allow_dirs:
-            show_item_6 = True
-        elif has_file:
-            if item_6_allow_all:
+        if 0 <= len(files) <= 1:
+            if has_dir and allow_dirs:
                 show_item_6 = True
-            else:
-                show_item_6 = any(any(p.lower().endswith(ext) for ext in item_6_exts) for p in paths if not os.path.isdir(p))
+            elif has_file:
+                if item_6_allow_all:
+                    show_item_6 = True
+                else:
+                    show_item_6 = any(any(p.lower().endswith(ext) for ext in item_6_exts) for p in paths if not os.path.isdir(p))
 
         if show_item_6:
+            if 'Convert Video' not in menus:
+                group_item = Nautilus.MenuItem(name='MediaMeshMenu::Convert Video', label='Convert Video', tip='Convert Video')
+                group_menu = Nautilus.Menu()
+                group_item.set_submenu(group_menu)
+                menus[''].append_item(group_item)
+                menus['Convert Video'] = group_menu
+            if 'Convert Video/Professional' not in menus:
+                group_item = Nautilus.MenuItem(name='MediaMeshMenu::Convert Video/Professional', label='Professional', tip='Professional')
+                group_menu = Nautilus.Menu()
+                group_item.set_submenu(group_menu)
+                menus['Convert Video'].append_item(group_item)
+                menus['Convert Video/Professional'] = group_menu
             item_6 = Nautilus.MenuItem(
                 name="MediaMeshMenu::Action6",
                 label="Apple ProRes (HQ)",
@@ -468,183 +682,239 @@ class MediameshmenuExtension(GObject.GObject, Nautilus.MenuProvider):
                 icon="video-x-generic",
             )
             item_6.connect("activate", _on_action_6, files)
-            submenu.append_item(item_6)
+            menus['Convert Video/Professional'].append_item(item_6)
             items_added += 1
         item_7_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts', '.mp3', '.aac', '.wav', '.flac', '.ogg', '.m4a')
         item_7_allow_all = False
         show_item_7 = False
 
-        if has_dir and allow_dirs:
-            show_item_7 = True
-        elif has_file:
-            if item_7_allow_all:
+        if 0 <= len(files) <= 1:
+            if has_dir and allow_dirs:
                 show_item_7 = True
-            else:
-                show_item_7 = any(any(p.lower().endswith(ext) for ext in item_7_exts) for p in paths if not os.path.isdir(p))
+            elif has_file:
+                if item_7_allow_all:
+                    show_item_7 = True
+                else:
+                    show_item_7 = any(any(p.lower().endswith(ext) for ext in item_7_exts) for p in paths if not os.path.isdir(p))
 
         if show_item_7:
+            if 'Extract Audio' not in menus:
+                group_item = Nautilus.MenuItem(name='MediaMeshMenu::Extract Audio', label='Extract Audio', tip='Extract Audio')
+                group_menu = Nautilus.Menu()
+                group_item.set_submenu(group_menu)
+                menus[''].append_item(group_item)
+                menus['Extract Audio'] = group_menu
             item_7 = Nautilus.MenuItem(
                 name="MediaMeshMenu::Action7",
-                label="Extract Audio (MP3)",
-                tip="Extract Audio (MP3)",
+                label="Extract MP3",
+                tip="Extract MP3",
                 icon="audio-x-generic",
             )
             item_7.connect("activate", _on_action_7, files)
-            submenu.append_item(item_7)
+            menus['Extract Audio'].append_item(item_7)
             items_added += 1
         item_8_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts', '.mp3', '.aac', '.wav', '.flac', '.ogg', '.m4a')
         item_8_allow_all = False
         show_item_8 = False
 
-        if has_dir and allow_dirs:
-            show_item_8 = True
-        elif has_file:
-            if item_8_allow_all:
+        if 0 <= len(files) <= 1:
+            if has_dir and allow_dirs:
                 show_item_8 = True
-            else:
-                show_item_8 = any(any(p.lower().endswith(ext) for ext in item_8_exts) for p in paths if not os.path.isdir(p))
+            elif has_file:
+                if item_8_allow_all:
+                    show_item_8 = True
+                else:
+                    show_item_8 = any(any(p.lower().endswith(ext) for ext in item_8_exts) for p in paths if not os.path.isdir(p))
 
         if show_item_8:
+            if 'Extract Audio' not in menus:
+                group_item = Nautilus.MenuItem(name='MediaMeshMenu::Extract Audio', label='Extract Audio', tip='Extract Audio')
+                group_menu = Nautilus.Menu()
+                group_item.set_submenu(group_menu)
+                menus[''].append_item(group_item)
+                menus['Extract Audio'] = group_menu
             item_8 = Nautilus.MenuItem(
                 name="MediaMeshMenu::Action8",
-                label="Extract Audio (AAC)",
-                tip="Extract Audio (AAC)",
+                label="Extract AAC",
+                tip="Extract AAC",
                 icon="audio-x-generic",
             )
             item_8.connect("activate", _on_action_8, files)
-            submenu.append_item(item_8)
+            menus['Extract Audio'].append_item(item_8)
             items_added += 1
         item_9_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts', '.mp3', '.aac', '.wav', '.flac', '.ogg', '.m4a')
         item_9_allow_all = False
         show_item_9 = False
 
-        if has_dir and allow_dirs:
-            show_item_9 = True
-        elif has_file:
-            if item_9_allow_all:
+        if 0 <= len(files) <= 1:
+            if has_dir and allow_dirs:
                 show_item_9 = True
-            else:
-                show_item_9 = any(any(p.lower().endswith(ext) for ext in item_9_exts) for p in paths if not os.path.isdir(p))
+            elif has_file:
+                if item_9_allow_all:
+                    show_item_9 = True
+                else:
+                    show_item_9 = any(any(p.lower().endswith(ext) for ext in item_9_exts) for p in paths if not os.path.isdir(p))
 
         if show_item_9:
+            if 'Extract Audio' not in menus:
+                group_item = Nautilus.MenuItem(name='MediaMeshMenu::Extract Audio', label='Extract Audio', tip='Extract Audio')
+                group_menu = Nautilus.Menu()
+                group_item.set_submenu(group_menu)
+                menus[''].append_item(group_item)
+                menus['Extract Audio'] = group_menu
             item_9 = Nautilus.MenuItem(
                 name="MediaMeshMenu::Action9",
-                label="Extract Audio (WAV)",
-                tip="Extract Audio (WAV)",
+                label="Extract WAV",
+                tip="Extract WAV",
                 icon="audio-x-generic",
             )
             item_9.connect("activate", _on_action_9, files)
-            submenu.append_item(item_9)
+            menus['Extract Audio'].append_item(item_9)
             items_added += 1
         item_10_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts', '.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp', '.ico')
         item_10_allow_all = False
         show_item_10 = False
 
-        if has_dir and allow_dirs:
-            show_item_10 = True
-        elif has_file:
-            if item_10_allow_all:
+        if 0 <= len(files) <= 1:
+            if has_dir and allow_dirs:
                 show_item_10 = True
-            else:
-                show_item_10 = any(any(p.lower().endswith(ext) for ext in item_10_exts) for p in paths if not os.path.isdir(p))
+            elif has_file:
+                if item_10_allow_all:
+                    show_item_10 = True
+                else:
+                    show_item_10 = any(any(p.lower().endswith(ext) for ext in item_10_exts) for p in paths if not os.path.isdir(p))
 
         if show_item_10:
+            if 'Images & Animations' not in menus:
+                group_item = Nautilus.MenuItem(name='MediaMeshMenu::Images & Animations', label='Images & Animations', tip='Images & Animations')
+                group_menu = Nautilus.Menu()
+                group_item.set_submenu(group_menu)
+                menus[''].append_item(group_item)
+                menus['Images & Animations'] = group_menu
             item_10 = Nautilus.MenuItem(
                 name="MediaMeshMenu::Action10",
-                label="Convert to GIF",
-                tip="Convert to GIF",
+                label="To GIF",
+                tip="To GIF",
                 icon="image-x-generic",
             )
             item_10.connect("activate", _on_action_10, files)
-            submenu.append_item(item_10)
+            menus['Images & Animations'].append_item(item_10)
             items_added += 1
         item_11_exts = ('.mp4', '.mkv', '.webm', '.mov', '.avi', '.wmv', '.flv', '.ts', '.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp', '.ico')
         item_11_allow_all = False
         show_item_11 = False
 
-        if has_dir and allow_dirs:
-            show_item_11 = True
-        elif has_file:
-            if item_11_allow_all:
+        if 0 <= len(files) <= 1:
+            if has_dir and allow_dirs:
                 show_item_11 = True
-            else:
-                show_item_11 = any(any(p.lower().endswith(ext) for ext in item_11_exts) for p in paths if not os.path.isdir(p))
+            elif has_file:
+                if item_11_allow_all:
+                    show_item_11 = True
+                else:
+                    show_item_11 = any(any(p.lower().endswith(ext) for ext in item_11_exts) for p in paths if not os.path.isdir(p))
 
         if show_item_11:
+            if 'Images & Animations' not in menus:
+                group_item = Nautilus.MenuItem(name='MediaMeshMenu::Images & Animations', label='Images & Animations', tip='Images & Animations')
+                group_menu = Nautilus.Menu()
+                group_item.set_submenu(group_menu)
+                menus[''].append_item(group_item)
+                menus['Images & Animations'] = group_menu
             item_11 = Nautilus.MenuItem(
                 name="MediaMeshMenu::Action11",
-                label="Convert to WEBP",
-                tip="Convert to WEBP",
+                label="To WEBP",
+                tip="To WEBP",
                 icon="image-x-generic",
             )
             item_11.connect("activate", _on_action_11, files)
-            submenu.append_item(item_11)
+            menus['Images & Animations'].append_item(item_11)
             items_added += 1
         item_12_exts = ('.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp', '.ico')
         item_12_allow_all = False
         show_item_12 = False
 
-        if has_dir and allow_dirs:
-            show_item_12 = True
-        elif has_file:
-            if item_12_allow_all:
+        if 0 <= len(files) <= 1:
+            if has_dir and allow_dirs:
                 show_item_12 = True
-            else:
-                show_item_12 = any(any(p.lower().endswith(ext) for ext in item_12_exts) for p in paths if not os.path.isdir(p))
+            elif has_file:
+                if item_12_allow_all:
+                    show_item_12 = True
+                else:
+                    show_item_12 = any(any(p.lower().endswith(ext) for ext in item_12_exts) for p in paths if not os.path.isdir(p))
 
         if show_item_12:
+            if 'Images & Animations' not in menus:
+                group_item = Nautilus.MenuItem(name='MediaMeshMenu::Images & Animations', label='Images & Animations', tip='Images & Animations')
+                group_menu = Nautilus.Menu()
+                group_item.set_submenu(group_menu)
+                menus[''].append_item(group_item)
+                menus['Images & Animations'] = group_menu
             item_12 = Nautilus.MenuItem(
                 name="MediaMeshMenu::Action12",
-                label="Convert to JPG",
-                tip="Convert to JPG",
+                label="To JPG",
+                tip="To JPG",
                 icon="image-x-generic",
             )
             item_12.connect("activate", _on_action_12, files)
-            submenu.append_item(item_12)
+            menus['Images & Animations'].append_item(item_12)
             items_added += 1
         item_13_exts = ('.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp', '.ico')
         item_13_allow_all = False
         show_item_13 = False
 
-        if has_dir and allow_dirs:
-            show_item_13 = True
-        elif has_file:
-            if item_13_allow_all:
+        if 0 <= len(files) <= 1:
+            if has_dir and allow_dirs:
                 show_item_13 = True
-            else:
-                show_item_13 = any(any(p.lower().endswith(ext) for ext in item_13_exts) for p in paths if not os.path.isdir(p))
+            elif has_file:
+                if item_13_allow_all:
+                    show_item_13 = True
+                else:
+                    show_item_13 = any(any(p.lower().endswith(ext) for ext in item_13_exts) for p in paths if not os.path.isdir(p))
 
         if show_item_13:
+            if 'Images & Animations' not in menus:
+                group_item = Nautilus.MenuItem(name='MediaMeshMenu::Images & Animations', label='Images & Animations', tip='Images & Animations')
+                group_menu = Nautilus.Menu()
+                group_item.set_submenu(group_menu)
+                menus[''].append_item(group_item)
+                menus['Images & Animations'] = group_menu
             item_13 = Nautilus.MenuItem(
                 name="MediaMeshMenu::Action13",
-                label="Convert to BMP",
-                tip="Convert to BMP",
+                label="To BMP",
+                tip="To BMP",
                 icon="image-x-generic",
             )
             item_13.connect("activate", _on_action_13, files)
-            submenu.append_item(item_13)
+            menus['Images & Animations'].append_item(item_13)
             items_added += 1
         item_14_exts = ('.jpg', '.jpeg', '.png', '.webp', '.gif', '.bmp', '.ico')
         item_14_allow_all = False
         show_item_14 = False
 
-        if has_dir and allow_dirs:
-            show_item_14 = True
-        elif has_file:
-            if item_14_allow_all:
+        if 0 <= len(files) <= 1:
+            if has_dir and allow_dirs:
                 show_item_14 = True
-            else:
-                show_item_14 = any(any(p.lower().endswith(ext) for ext in item_14_exts) for p in paths if not os.path.isdir(p))
+            elif has_file:
+                if item_14_allow_all:
+                    show_item_14 = True
+                else:
+                    show_item_14 = any(any(p.lower().endswith(ext) for ext in item_14_exts) for p in paths if not os.path.isdir(p))
 
         if show_item_14:
+            if 'Images & Animations' not in menus:
+                group_item = Nautilus.MenuItem(name='MediaMeshMenu::Images & Animations', label='Images & Animations', tip='Images & Animations')
+                group_menu = Nautilus.Menu()
+                group_item.set_submenu(group_menu)
+                menus[''].append_item(group_item)
+                menus['Images & Animations'] = group_menu
             item_14 = Nautilus.MenuItem(
                 name="MediaMeshMenu::Action14",
-                label="Convert to ICO",
-                tip="Convert to ICO",
+                label="To ICO",
+                tip="To ICO",
                 icon="image-x-generic",
             )
             item_14.connect("activate", _on_action_14, files)
-            submenu.append_item(item_14)
+            menus['Images & Animations'].append_item(item_14)
             items_added += 1
         if items_added == 0:
             return []
